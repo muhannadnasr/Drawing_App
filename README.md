@@ -4,4 +4,4 @@ Draw multiple shapes and add styling to each of them
 * Ali Hassan Youssef
 * Mohannad Tarek Abd El-khalek
 * Mohannad Nasr Abdo
-* Shehab Mohammed Saad
+* Shehab Mohamed Saad
