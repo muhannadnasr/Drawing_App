@@ -2,8 +2,10 @@
   <div id="home-menu">
       <undoRedo/>
       <clipboard/>
+      <deleteBtn/>
       <font/>
       <colorStyle/>
+      <draw/>
   </div>
 </template>
 
@@ -12,6 +14,8 @@ import clipboard from './home-menu/clipboard.vue';
 import undoRedo from './home-menu/undoRedo.vue';
 import font from './home-menu/fontAndParagraph.vue';
 import colorStyle from './home-menu/colorPicker.vue';
+import deleteBtn from './home-menu/delete.vue';
+import draw from './home-menu/draw.vue';
 export default {
   name: 'homeMenu',
   components: {
@@ -19,6 +23,8 @@ export default {
     clipboard,
     font,
     colorStyle,
+    deleteBtn,
+    draw,
   },
   props: {
   },
@@ -32,7 +38,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  box-shadow: 0px 4px 8px -6px darkgray;
+  box-shadow: 0px 5px 8px -6px darkgray;
   user-select: none;
 }
 

@@ -32,7 +32,7 @@ export default {
 #clipboard{
   display: grid;
   grid-template-columns: 60px 30px 10px;
-  grid-template-rows: 30px 30px 10px;
+  grid-template-rows: 30px 30px 13px;
   justify-items: center;
   align-items: center;
 }

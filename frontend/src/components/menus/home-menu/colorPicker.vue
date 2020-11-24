@@ -1,14 +1,14 @@
 <template>
   <div id="color-style-menu">
     <div @click="activateMenu(colorFillMenu)" class="sub-elem circle-fill" id="color-fill-btn">
-      <svg width="100%" height="100%" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle id="fill-icon" cx="30px" cy="30px" r="29px" stroke="black" stroke-width="2" :style="{fill: colorFillMenu.selectedColor}"/>
+      <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30px" cy="30px" r="20px" stroke="black" stroke-width="2" :style="{fill: colorFillMenu.selectedColor}"/>
       </svg>
     </div>
 
     <div @click="activateMenu(outlineMenu)" class="sub-elem circle-outline" id="color-outline-btn">
-      <svg width="100%" height="100%" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle id="outline-icon" cx="30px" cy="30px" r="25px" :style="{stroke: outlineMenu.selectedColor}" stroke-width="10px" fill="none"/>
+      <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30px" cy="30px" r="17px" :style="{stroke: outlineMenu.selectedColor}" stroke-width="10px" fill="none"/>
       </svg>
     </div>
 
@@ -23,6 +23,8 @@
       ></div>
       </div>
     </div>
+
+    <div class="seperator"></div>
   </div>
 </template>
 
@@ -87,8 +89,10 @@ export default {
     },
     toggleColorMenu(menu){
       menu.show = !menu.show;
+
       if (menu.show) this.showColorMenu(menu.btnId);
       else this.hideColorMenu();
+
       this.currActiveMenu = menu;
       this.prevActiveMenuId = menu.id;
     },
@@ -141,7 +145,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px 10px;
 }
 .sub-elem:hover{
   background-color: whitesmoke;
@@ -161,7 +164,7 @@ export default {
   position: absolute;
   height: 200px;
   width: 150px;
-  
+  z-index: 9999999;
 }
 
 #standard-colors-sec{
@@ -201,5 +204,12 @@ export default {
   height: 25px;
   width: 25px;
   margin: 2px 5px;
+}
+
+.seperator{
+  height: 70px;
+  grid-column: 3/4;
+  grid-row: 1/4;
+  border-left: thin solid darkgray;
 }
 </style>
