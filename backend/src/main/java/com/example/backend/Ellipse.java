@@ -5,7 +5,8 @@ public class Ellipse extends Shape{
     private double radiusY ;
     private Point center ;
 
-    Ellipse (double r1 , double r2, Point c){
+    Ellipse (Integer ID, double r1 , double r2, Point c){
+        this.setID(ID);
         this.radiusX = r1;
         this.radiusY = r2;
         this.center = c;
@@ -29,5 +30,12 @@ public class Ellipse extends Shape{
     }
     public Point getCenter(){
         return this.center;
+    }
+    public void changeSize(Double length1, Double length2, Point[]points){
+        this.setRadiusX(length1);
+        this.setRadiusY(length2);
+    }
+    public void changePosition(Point startingPosition, Point[]points){
+        this.setCenter(startingPosition);
     }
 }

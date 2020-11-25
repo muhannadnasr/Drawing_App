@@ -2,7 +2,7 @@ package com.example.backend;
 
 public class Shape {
 
-    private String ID = null;
+    private Integer ID = null;
     private String type = null;
     private double angle = 0;
     private RGB outlineColor;
@@ -11,12 +11,12 @@ public class Shape {
     private String text = null;
     private int z;
 
-    public void setID(String ID){
+    public void setID(Integer ID){
 
     this.ID = ID;
 
     }
-    public String getID(){
+    public Integer getID(){
 
     return ID;
 
@@ -91,5 +91,6 @@ public class Shape {
     return z;
     
     }
-
+    public void changeSize(Double length1, Double length2, Point[]points){}
+    public void changePosition(Point startingPosition, Point[]points){}
 }

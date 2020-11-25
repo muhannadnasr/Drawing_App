@@ -1,14 +1,14 @@
 package com.example.backend;
 
-import java.util.List;
 
 public class Polygon extends Shape{
-    Point startingPosition ;
-    List <Point> points ;
+    Point startingPosition;
+    Point[]points;
 
-    Polygon(Point p){
+    Polygon(Integer ID, Point p, Point[]points){
+        this.setID(ID);
         this.startingPosition = p;
-        this.points = null;
+        this.points = points;
     }
 
     public void setStartingPosition(Point p){
@@ -19,11 +19,17 @@ public class Polygon extends Shape{
         return this.startingPosition;
     }
     
-    public void setPoints(Point p){
-        this.points.add(p);
+    public void setPoints(Point[]points){
+        this.points = points;
     }
 
-    public List<Point> getPoints(){
+    public Point[] getPoints(){
         return this.points;
+    }
+    public void changeSize(Double length1, Double length2, Point[]points){
+        this.setPoints(points);
+    }
+    public void changePosition(Point startingPosition, Point[]points){
+        this.setPoints(points);
     }
 }
