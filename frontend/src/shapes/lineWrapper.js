@@ -1,0 +1,123 @@
+import gsap from 'gsap';
+
+import store from "../store";
+
+export class LineWrapper{
+  constructor(line){
+    this.id = line.shapeId;
+    this.lineWrapped = line;  
+    this.board = document.getElementById("board");
+    this.wrapper = this._createLineWrapper();
+    this.clicked = true;
+    this.mouseDown = false;
+    this._addEventHandlers();
+  }
+
+  _createLineWrapper(){
+		const lineLength = Math.sqrt(Math.pow((this.lineWrapped.endingPoint.x - this.lineWrapped.startingPoint.x), 2) +
+		Math.pow((this.lineWrapped.endingPoint.y - this.lineWrapped.startingPoint.y), 2));
+
+		const centerX = (this.lineWrapped.startingPoint.x + this.lineWrapped.endingPoint.x) /2;
+		const centerY = (this.lineWrapped.startingPoint.y + this.lineWrapped.endingPoint.y) /2;
+
+		const width = this.lineWrapped.endingPoint.x - this.lineWrapped.startingPoint.x;
+		const height = this.lineWrapped.endingPoint.y - this.lineWrapped.startingPoint.y;
+		const rotationAngle = Math.atan(height/ width) *(180/ Math.PI);
+
+		const selectorRadiusW = (lineLength/2) + 10;
+		const selectorRadiusH = 7;
+
+		const svgns = "http://www.w3.org/2000/svg"; //variable for the namespace
+		const selectionWrapper = document.createElementNS(svgns, "ellipse");
+		gsap.set(selectionWrapper, {
+      attr: {
+        cx: centerX, cy: centerY, rx: selectorRadiusW, ry: selectorRadiusH,
+        fill: 'transparent', 
+        transform: `rotate(${rotationAngle} ${centerX} ${centerY})`,
+        id: `line-selector-${this.lineWrapped.cssId}`
+      }
+		});
+		this.board.appendChild(selectionWrapper);
+		selectionWrapper.style.zIndex = this.lineWrapped.zIndex;
+		selectionWrapper.style.userSelect = 'none';
+
+		return selectionWrapper;
+  }
+
+  updatePos(){
+    const centerX = (this.lineWrapped.startingPoint.x + this.lineWrapped.endingPoint.x) /2;
+		const centerY = (this.lineWrapped.startingPoint.y + this.lineWrapped.endingPoint.y) /2;
+    this.wrapper.setAttribute("cx", centerX);
+    this.wrapper.setAttribute("cy", centerY);
+  }
+
+  _addEventHandlers(){
+    this.wrapper.onclick = () => this._clickAcion();
+    this.wrapper.onmousedown = () => this._mouseDownAction();
+    this.wrapper.onmouseover = () => this._mosueOverAction();
+    this.wrapper.onmouseup = () => this._mouseUpAction();
+  }
+
+  _clickAcion(){
+    this.clicked = !this.clicked;
+    if(this.clicked){
+      this.disablePrevSelector();
+      this.enable();
+    }
+    else{
+      this.disable();
+    }
+  }
+
+  _mouseDownAction(){
+    // if(!this.clicked) return;
+    this.mouseDown = true;
+    this._trackMovement();
+  }
+
+  _mosueOverAction(){
+
+  }
+
+  _mouseUpAction(){
+    this.mouseDown = false;
+  }
+  
+  //moving shape
+  _trackMovement(){
+    let prevX = window.mouseX;
+    let prevY = window.mouseY - 110;
+
+    const tracker = setInterval(() => {
+      if(!this.mouseDown || !store.getters.boardMouseDown) clearInterval(tracker);
+      else {
+        const updateX = window.mouseX;
+        const updatedY = window.mouseY - 110;
+        const xShift = updateX - prevX;
+        const yShift = updatedY - prevY;
+        const newStartingPointX = this.lineWrapped.startingPoint.x + xShift;
+        const newStartingPointY = this.lineWrapped.startingPoint.y + yShift;
+        const newEndingPointX = this.lineWrapped.endingPoint.x + xShift;
+        const newEndingPointY = this.lineWrapped.endingPoint.y + yShift;
+        prevX = window.mouseX;
+        prevY = window.mouseY - 110;
+        this.lineWrapped.updateStartingPos(newStartingPointX, newStartingPointY);
+        this.lineWrapped.updateEndingPos(newEndingPointX, newEndingPointY);
+        this.updatePos();
+      }
+    }, 1); 
+  }
+  //sub actions
+  disable(){
+    this.mouseDown = false;
+  }
+  enable(){
+    return;
+  }
+  disablePrevSelector(){
+    const prevSelector = store.getters.currentSelector;
+    prevSelector.disable();
+    if(prevSelector.id !== this.id) prevSelector.clicked = false;
+    store.commit('setSelector', this);
+  }
+}

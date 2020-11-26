@@ -48,12 +48,16 @@ export default {
       }
     }
   },
-  computed: mapGetters(['isDrawing', 'shapeType']),
+  computed: mapGetters(['isDrawing', 'shapeType', 'currentSelector']),
   methods:{
     ...mapActions(['enableDrawingMode', 'disableDrawingMode', 'controlShapeType']),
     enableDrawing(shapeType){
       this.enableDrawingMode();
       this.controlShapeType(shapeType);
+      if(this.currentSelector !== null) {
+        this.currentSelector.disable();
+        this.currentSelector.clicked = false;
+      } 
     },
   },
 }

@@ -4,13 +4,19 @@
         :class="[isDrawing? 'crosshair-pointer' : 'default-pointer']"
         @mousedown="mouseDownHandling()"
         @mouseover="mouseOverHandling()"
-        @mouseup="mouseUpHandling()">
+        @mouseup="mouseUpHandling()"
+        >
   </svg>
 </template>
 
 <script>
 import gsap from 'gsap';
 import { Square } from '../shapes/square.js';
+import { Ellipse } from '../shapes/ellipse.js';
+import { Triangle } from '../shapes/triangle.js';
+import { ShapeWrapper } from "../shapes/shapeWrapper.js";
+import { LineWrapper } from "../shapes/lineWrapper.js";
+import { Line } from '../shapes/line.js';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'board',
@@ -53,7 +59,7 @@ export default {
   },
   computed: mapGetters(['isDrawing', 'shapeType']),
   methods:{
-    ...mapActions(['disableDrawingMode']),
+    ...mapActions(['disableDrawingMode', 'setCurrentSelector', 'setBoardMouseDown']),
     //Drawing Shapes
     mouseOverHandling(){
       const mousePosTracker = setInterval(() => {
@@ -64,6 +70,7 @@ export default {
       }, 100);    
     },
     mouseDownHandling(){
+      this.setBoardMouseDown(true);
       if (this.isDrawing) {
         this.boardProbs.mouseDown = true;
         this.setStartingPos();
@@ -72,14 +79,19 @@ export default {
       
       const shapeSizeTracker = setInterval(() => {
         if(this.isDrawing && this.boardProbs.mouseDown) {
-          const updatedX = Math.min(this.currentShape.startingPos.x, this.mousePointer.x);
-          const updatedY = Math.min(this.currentShape.startingPos.y, this.mousePointer.y);
-          this.currentShape.shape.updatePos(updatedX, updatedY);
+          if(this.isLine()){
+            this.currentShape.shape.updateEndingPos(this.mousePointer.x, this.mousePointer.y)
+          }
+          else{
+            const updatedX = Math.min(this.currentShape.startingPos.x, this.mousePointer.x);
+            const updatedY = Math.min(this.currentShape.startingPos.y, this.mousePointer.y);
+            this.currentShape.shape.updatePos(updatedX, updatedY);
 
-          const currentWidth = Math.abs(this.currentShape.startingPos.x - this.mousePointer.x);
-          const currentHeight = Math.abs(this.currentShape.startingPos.y - this.mousePointer.y);
-          this.currentShape.shape.updateWidth(currentWidth);
-          this.currentShape.shape.updateHeight(currentHeight);
+            const currentWidth = Math.abs(this.currentShape.startingPos.x - this.mousePointer.x);
+            const currentHeight = Math.abs(this.currentShape.startingPos.y - this.mousePointer.y);
+            this.currentShape.shape.updateWidth(currentWidth);
+            this.currentShape.shape.updateHeight(currentHeight);
+          }
         }
         else clearInterval(shapeSizeTracker);
       }, 10);
@@ -87,17 +99,52 @@ export default {
     },
     mouseUpHandling(){
       if(this.isDrawing) {
-        if (this.currentShape.startingPos.x === this.mousePointer.x &&
-            this.currentShape.startingPos.y === this.mousePointer.y) this.createShape(100, 100);
+        const xError = Math.abs(this.currentShape.startingPos.x - this.mousePointer.x);
+        const yError = Math.abs(this.currentShape.startingPos.y - this.mousePointer.y);
+        
+        if (this.isAcceptableError(xError) && this.isAcceptableError(yError)){
+          this.board.removeChild(this.currentShape.shape.shape);
+          if(this.isSquare()) this.createShape(100, 100);
+          else if(this.isRectangle()) this.createShape(200, 100);
+          else if(this.isCircle()) this.createShape(100, 100);
+          else if(this.isEllipse()) this.createShape(200, 100);
+          else if(this.isTriangle()) this.createShape(100, 100);
+          else if(this.isLine()) this.createShape(100, 100);
+        } 
+
         this.boardProbs.mouseDown = false;
+        if(!this.isLine()) {
+          this.currentShape.shape.selector = new ShapeWrapper(this.currentShape.shape);
+          this.setCurrentSelector(this.currentShape.shape.selector);
+        }
+        else{
+          this.currentShape.shape.selector = new LineWrapper(this.currentShape.shape);
+          this.setCurrentSelector(this.currentShape.shape.selector);
+        }
         this.disableDrawingMode();
       }
+      this.setBoardMouseDown(false);
     },
     createShape(width, height){
-      if (this.shapeType === this.shapeTypes.square){
-        this.currentShape.shape= new Square(this.currentShape.startingPos.x, this.currentShape.startingPos.y);
-        this.currentShape.shape.create(width, height);
+      if (this.isSquare() || this.isRectangle()){
+        const type = this.shapeType;
+        this.currentShape.shape = new Square(this.currentShape.startingPos.x, this.currentShape.startingPos.y, type);
       }
+      else if(this.isCircle() || this.isEllipse()){
+        this.currentShape.shape = new Ellipse(this.currentShape.startingPos.x, this.currentShape.startingPos.y, this.shapeType);
+      }
+      else if(this.isTriangle()){
+        this.currentShape.shape = new Triangle(this.currentShape.startingPos.x, this.currentShape.startingPos.y, this.shapeType);
+      }
+      else if(this.isLine()){
+        this.currentShape.shape = new Line(this.currentShape.startingPos.x, this.currentShape.startingPos.y, this.shapeType);
+      }
+      if(this.isLine()) {
+        const endingX = this.currentShape.startingPos.x + width;
+        const endingY = this.currentShape.startingPos.y - height;
+        this.currentShape.shape.create(this.currentShape.startingPos.x, this.currentShape.startingPos.y, endingX, endingY);
+      }
+      else this.currentShape.shape.create(width, height);
     },
     setStartingPos(){
       this.currentShape.startingPos.x = this.mousePointer.x;
@@ -105,6 +152,28 @@ export default {
     },
     mouseOnBoard(){
       return this.board.matches(':hover');
+    },
+    isSquare(){
+      return this.shapeType === this.shapeTypes.square;
+    },
+    isRectangle(){
+      return this.shapeType === this.shapeTypes.rectangle;
+    },
+    isCircle(){
+      return this.shapeType === this.shapeTypes.circle;
+    },
+    isEllipse(){
+      return this.shapeType === this.shapeTypes.ellipse;
+    },
+    isTriangle(){
+      return this.shapeType === this.shapeTypes.triangle;
+    },
+    isLine(){
+      return this.shapeType === this.shapeTypes.line;
+    },
+    isAcceptableError(error){
+      if(error >= 0 && error <= 10) return true;
+      return false;
     },
     //grid functions
     createGrid(){
@@ -164,5 +233,9 @@ export default {
 
 .crosshair-pointer{
   cursor: crosshair;
+}
+
+.e-resize-pointer{
+  cursor: e;
 }
 </style>

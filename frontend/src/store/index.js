@@ -1,6 +1,7 @@
 import Vuex from 'vuex';
 import Vue from 'vue';
 import drawing from './modules/drawing.js';
+import selecting from './modules/selecting.js';
 //load Vuex
 Vue.use(Vuex);
 
@@ -8,5 +9,6 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     drawing,
+    selecting,
   }
 });
