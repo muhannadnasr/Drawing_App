@@ -5,7 +5,8 @@ public class Rectangle extends Shape{
     private double width ;
     private Point upperLeftCornerPoint ;
 
-    Rectangle(Integer ID, double h, double w, Point p){
+    Rectangle(Integer ID, String type, double h, double w, Point p){
+        this.setType(type);
         this.setID(ID);
         this.height = h;
         this.width = w ;

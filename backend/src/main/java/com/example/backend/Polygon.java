@@ -5,8 +5,9 @@ public class Polygon extends Shape{
     Point startingPosition;
     Point[]points;
 
-    Polygon(Integer ID, Point p, Point[]points){
+    Polygon(Integer ID, String type, Point p, Point[]points){
         this.setID(ID);
+        this.setType(type);
         this.startingPosition = p;
         this.points = points;
     }

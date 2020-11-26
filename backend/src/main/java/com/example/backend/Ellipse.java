@@ -5,8 +5,9 @@ public class Ellipse extends Shape{
     private double radiusY ;
     private Point center ;
 
-    Ellipse (Integer ID, double r1 , double r2, Point c){
+    Ellipse (Integer ID, String type, double r1 , double r2, Point c){
         this.setID(ID);
+        this.setType(type);
         this.radiusX = r1;
         this.radiusY = r2;
         this.center = c;
