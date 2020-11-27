@@ -6,8 +6,7 @@ public class Polygon extends Shape{
     Point[]points;
 
     Polygon(Integer ID, String type, Point p, Point[]points){
-        this.setID(ID);
-        this.setType(type);
+        super(ID, type);
         this.startingPosition = p;
         this.points = points;
     }
@@ -15,7 +14,6 @@ public class Polygon extends Shape{
     public void setStartingPosition(Point p){
         this.startingPosition = p;
     }
-
     public Point getStartingPosition(){
         return this.startingPosition;
     }
@@ -23,10 +21,10 @@ public class Polygon extends Shape{
     public void setPoints(Point[]points){
         this.points = points;
     }
-
     public Point[] getPoints(){
         return this.points;
     }
+    
     public void changeSize(Double length1, Double length2, Point[]points){
         this.setPoints(points);
     }

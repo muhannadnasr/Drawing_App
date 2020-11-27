@@ -6,8 +6,7 @@ public class Rectangle extends Shape{
     private Point upperLeftCornerPoint ;
 
     Rectangle(Integer ID, String type, double h, double w, Point p){
-        this.setType(type);
-        this.setID(ID);
+        super(ID, type);
         this.height = h;
         this.width = w ;
         this.upperLeftCornerPoint = p;
@@ -16,7 +15,6 @@ public class Rectangle extends Shape{
     public void setHeight(double h){
         this.height = h ;
     }
-
     public double getHeight(){
         return this.height;
     }
@@ -25,17 +23,17 @@ public class Rectangle extends Shape{
     public void setWidth(double w){
         this.width = w ;
     }
-
     public double getWidth(){
         return this.width;
     }
+
     public void setUpperLeftCorner(Point p){
         this.upperLeftCornerPoint = p ;
     }
-
     public Point getUpperLeftCorner(){
         return this.upperLeftCornerPoint;
     }
+    
     public void changeSize(Double length1, Double length2, Point[]points){
         this.setHeight(length1);
         this.setWidth(length2);

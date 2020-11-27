@@ -14,12 +14,12 @@ public class Controller {
         return redo.peek();
     }
     public void addUndo(Shape shape){
-        Shape clone = new Shape();
+        Shape clone;
         try{
             clone = (Shape)shape.clone();
+            undo.push(clone);
         }catch(Exception e){
             e.printStackTrace();
         }
-        undo.push(clone);
     }
 }

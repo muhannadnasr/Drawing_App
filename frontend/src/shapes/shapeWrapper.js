@@ -55,7 +55,7 @@ export class ShapeWrapper{
     const cornerSelector = document.createElementNS(svgns, "circle");
     gsap.set(cornerSelector, {
     attr: {
-        cx: centerX, cy: centerY, r: 3,
+        cx: centerX, cy: centerY, r: 4,
         fill: '#4262ff', stroke: "none",
         'stroke-width': 0, class: `selector-corner-${this.shpaeWrapped.cssId}`
         }
