@@ -13,17 +13,23 @@ public class Api {
 
     // Creation and undo/redo
     public Shape performUndo(){
-        return controller.performUndo();
+        Shape shape = controller.performUndo();
+        Integer ID = shape.getID();
+        factory.updateShape(ID, shape);
+        return shape;
     }
     public Shape performRedo(){
-        return controller.performRedo();
+        Shape shape = controller.performRedo();
+        Integer ID = shape.getID();
+        factory.updateShape(ID, shape);
+        return shape;
     }
     public Shape getShape(Integer ID){
         return factory.getShape(ID);
     }
     public void createShape(String type, Integer ID, Double length1, Double length2, Point startingPoint, Point[]points){
         factory.createShape(type, ID, length1, length2, startingPoint, points);
-        controller.addUndo(getShape(ID)); // after adding shape, we add the shape to undo stack
+        controller.addUndo(getShape(ID)); // after adding shape, we add clone of shape to undo stack
     }
     
     // Changing features of shapes
@@ -67,11 +73,18 @@ public class Api {
         shape.setZ(z);
         refreshShape(ID, shape);
     }
+    public void changeContainerAttributes(Integer ID, Point upperLeftCorner, Double height, Double width){
+        Shape shape = getShape(ID);
+        shape.setContainerUpperLeftCorner(upperLeftCorner);
+        shape.setContainerHeight(height);
+        shape.setContainerWidth(width);
+        refreshShape(ID, shape);
+    }
 
     // Doesn't need URL Mapping
     public void refreshShape(Integer ID, Shape shape){
         factory.updateShape(ID, shape); // after editing shape, we update the shape in the map   
-        controller.addUndo(shape); // after editing shape, we add the shape to undo stack
+        controller.addUndo(shape); // after editing shape, we add clone of shape to undo stack
     }
 
 }

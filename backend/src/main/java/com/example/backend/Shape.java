@@ -1,8 +1,11 @@
 package com.example.backend;
 
-public class Shape {
+public class Shape implements Cloneable{
 
     private Integer ID = null;
+    private Point containerUpperLeftCorner;
+    private Double containerHeight;
+    private Double containerWidth;
     private String type = null;
     private double angle = 0;
     private RGB outlineColor;
@@ -10,6 +13,11 @@ public class Shape {
     private int thickness;
     private String text = null;
     private int z;
+
+    @Override
+		protected Object clone() throws CloneNotSupportedException {
+		    return super.clone();
+		}
 
     public void setID(Integer ID){
 
@@ -90,6 +98,24 @@ public class Shape {
 
     return z;
     
+    }
+    public void setContainerUpperLeftCorner(Point point){
+        this.containerUpperLeftCorner = point;
+    }
+    public Point getContainerUpperLeftCorner(){
+        return this.containerUpperLeftCorner;
+    }
+    public void setContainerHeight(Double height){
+        this.containerHeight = height;
+    }
+    public Double getContainerHeight(){
+        return this.containerHeight;
+    }
+    public void setContainerWidth(Double width){
+        this.containerWidth = width;
+    }
+    public Double setContainerWidth(){
+        return this.containerWidth;
     }
     public void changeSize(Double length1, Double length2, Point[]points){}
     public void changePosition(Point startingPosition, Point[]points){}
