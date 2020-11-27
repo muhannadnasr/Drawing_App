@@ -1,7 +1,7 @@
 <template>
   <svg  id="board" :width="boardProbs.width" :height="boardProbs.height"
         version="1.1" xmlns="http://www.w3.org/2000/svg"
-        :class="[isDrawing? 'crosshair-pointer' : 'default-pointer']"
+        :class="setBoardCursor()"
         @mousedown="mouseDownHandling()"
         @mouseover="mouseOverHandling()"
         @mouseup="mouseUpHandling()"
@@ -57,7 +57,7 @@ export default {
       }
     }
   },
-  computed: mapGetters(['isDrawing', 'shapeType']),
+  computed: mapGetters(['isDrawing', 'shapeType', 'isResizing', 'resizingDirection']),
   methods:{
     ...mapActions(['disableDrawingMode', 'setCurrentSelector', 'setBoardMouseDown']),
     //Drawing Shapes
@@ -175,6 +175,11 @@ export default {
       if(error >= 0 && error <= 10) return true;
       return false;
     },
+    setBoardCursor(){
+      if(this.isDrawing) return "crosshair-pointer";
+      if(this.isResizing) return `${this.resizingDirection}-pointer`;
+      else return "default-pointer"
+    },
     //grid functions
     createGrid(){
       //drawing the grid
@@ -235,7 +240,18 @@ export default {
   cursor: crosshair;
 }
 
-.e-resize-pointer{
-  cursor: e;
+.ne-resize-pointer{
+  cursor: ne-resize;
 }
+.nw-resize-pointer{
+  cursor: nw-resize;
+}
+.sw-resize-pointer{
+  cursor: sw-resize;
+}
+.se-resize-pointer{
+  cursor: se-resize;
+}
+
+
 </style>

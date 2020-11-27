@@ -183,11 +183,12 @@ export class ShapeWrapper{
   }
   
   _cornerMouseLeaveAction(){
-    document.getElementById('board').style.cursor = "default";
+    store.commit("setResizing", false);
   }
 
   _cornerMouseOverAction(mosueDirection){
-    document.getElementById('board').style.cursor = mosueDirection;
+    store.commit("setResizing", true);
+    store.commit("setDirection", mosueDirection);
   }
   //moving the shape
   _mouseDownAction(){
