@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 
 @RestController
@@ -32,6 +33,7 @@ public class Xml {
     // ## THIS IS A TEMPLATE FOR USING XML NOT THE REAL CODE!!!
     @GetMapping("/xmltojava")
     public String xmlToJava() {
+        HashMap <Integer, Shape> shapes = new HashMap<Integer, Shape>(); 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         String answer = "";
         try {
@@ -73,10 +75,14 @@ public class Xml {
             Element element= document.createElement("Shapes");
             document.appendChild(element);
 
-            for(int i=0; i<5; i++){
+            //for(int i=0; i<5; i++){
                 // features of the developers
                 Element developer = document.createElement("Shape");
                 element.appendChild(developer);
+
+                Attr attr = document.createAttribute("type");
+                attr.setValue("ellipse");
+                developer.setAttributeNode(attr);
 
                 Element name = document.createElement("ID");
                 name.appendChild(document.createTextNode("12"));
@@ -90,7 +96,7 @@ public class Xml {
                 age.appendChild(document.createTextNode("56"));
                 developer.appendChild(age);
 
-            }
+           // }
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(document);
@@ -106,6 +112,6 @@ public class Xml {
             e.printStackTrace();
             return "failed";
         }
-        return "Success!";
+        return "Success! Saved to XML successfully!";
     }
 }
