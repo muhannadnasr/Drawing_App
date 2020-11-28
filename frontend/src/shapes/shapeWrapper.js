@@ -14,6 +14,12 @@ export class ShapeWrapper{
       lowerLeft: null,
       lowerRight: null,
     };
+    this.edges = {
+      left: null,
+      right: null,
+      up: null,
+      down: null,
+    }
     this.width = 0;
     this.height = 0;
     this.startingPos = {x: 0, y: 0};
@@ -48,9 +54,10 @@ export class ShapeWrapper{
     this.wrapper = selectionWrapper;
 
     this._createCorners();
+    this._createEdgesSelectors();
   }
 
-  _createCornerSelector(centerX, centerY){
+  _createCircularSelector(centerX, centerY){
     const svgns = "http://www.w3.org/2000/svg"; //variable for the namespace
     const cornerSelector = document.createElementNS(svgns, "circle");
     gsap.set(cornerSelector, {
@@ -68,10 +75,19 @@ export class ShapeWrapper{
   }
  
   _createCorners(){
-    this.corners.upperLeft = this._createCornerSelector(this.startingPos.x, this.startingPos.y)
-    this.corners.lowerLeft = this._createCornerSelector(this.startingPos.x, this.startingPos.y + this.height)
-    this.corners.upperRight = this._createCornerSelector(this.startingPos.x + this.width, this.startingPos.y);
-    this.corners.lowerRight = this._createCornerSelector(this.startingPos.x + this.width, this.startingPos.y + this.height);
+    this.corners.upperLeft = this._createCircularSelector(this.startingPos.x, this.startingPos.y)
+    this.corners.lowerLeft = this._createCircularSelector(this.startingPos.x, this.startingPos.y + this.height)
+    this.corners.upperRight = this._createCircularSelector(this.startingPos.x + this.width, this.startingPos.y);
+    this.corners.lowerRight = this._createCircularSelector(this.startingPos.x + this.width, this.startingPos.y + this.height);
+  }
+
+  _createEdgesSelectors(){
+    const middlepoints = this.getEdgesMiddlePoints();
+    
+    this.edges.left = this._createCircularSelector(middlepoints.leftEdge.x, middlepoints.leftEdge.y);
+    this.edges.right = this._createCircularSelector(middlepoints.rightEdge.x, middlepoints.rightEdge.y);
+    this.edges.up = this._createCircularSelector(middlepoints.upperEdge.x, middlepoints.upperEdge.y);
+    this.edges.down = this._createCircularSelector(middlepoints.lowerEdge.x, middlepoints.lowerEdge.y);
   }
 
   updatePos(x, y){
@@ -80,6 +96,7 @@ export class ShapeWrapper{
     this.wrapper.setAttribute("x", x);
     this.wrapper.setAttribute("y", y);
     this._updateCorners();
+    this._updateEgesSelectors();
   }
 
   updateWidth(width){
@@ -106,6 +123,22 @@ export class ShapeWrapper{
     this.corners.lowerRight.setAttribute("cy",this.startingPos.y + this.height);
   }
 
+  _updateEgesSelectors(){
+    const middlepoints = this.getEdgesMiddlePoints();
+
+    this.edges.left.setAttribute("cx", middlepoints.leftEdge.x);
+    this.edges.left.setAttribute("cy", middlepoints.leftEdge.y);
+
+    this.edges.right.setAttribute("cx", middlepoints.rightEdge.x);
+    this.edges.right.setAttribute("cy", middlepoints.rightEdge.y);
+
+    this.edges.up.setAttribute("cx" ,middlepoints.upperEdge.x);
+    this.edges.up.setAttribute("cy", middlepoints.upperEdge.y);
+
+    this.edges.down.setAttribute("cx", middlepoints.lowerEdge.x);
+    this.edges.down.setAttribute("cy", middlepoints.lowerEdge.y);
+  }
+
   _addEventHandlers(){
     this.wrapper.onclick = () => this._clickAcion();
     this.wrapper.onmousedown = () => this._mouseDownAction();
@@ -113,27 +146,47 @@ export class ShapeWrapper{
 
     this.corners.upperLeft.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width,
                                                                             this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height);
-    this.corners.upperLeft.onmouseover = () => this._cornerMouseOverAction("nw-resize");
-    this.corners.upperLeft.onmouseleave = () => this._cornerMouseLeaveAction();
-    this.corners.upperLeft.onmouseup = () => this._cornerMouseUpAction();
+    this.corners.upperLeft.onmouseover = () => this._resizingMouseOVerAction("nw-resize");
+    this.corners.upperLeft.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.corners.upperLeft.onmouseup = () => this._resizingMouseUpAction();
 
     this.corners.upperRight.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x,
                                                                              this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height);
-    this.corners.upperRight.onmouseover = () => this._cornerMouseOverAction("ne-resize");
-    this.corners.upperRight.onmouseleave = () => this._cornerMouseLeaveAction();
-    this.corners.upperRight.onmouseup = () => this._cornerMouseUpAction();
+    this.corners.upperRight.onmouseover = () => this._resizingMouseOVerAction("ne-resize");
+    this.corners.upperRight.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.corners.upperRight.onmouseup = () => this._resizingMouseUpAction();
 
     this.corners.lowerLeft.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width,
                                                                             this.shpaeWrapped.upperLeftCorner.y);
-    this.corners.lowerLeft.onmouseover = () => this._cornerMouseOverAction("sw-resize");
-    this.corners.lowerLeft.onmouseleave = () => this._cornerMouseLeaveAction();
-    this.corners.lowerLeft.onmouseup = () => this._cornerMouseUpAction();
+    this.corners.lowerLeft.onmouseover = () => this._resizingMouseOVerAction("sw-resize");
+    this.corners.lowerLeft.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.corners.lowerLeft.onmouseup = () => this._resizingMouseUpAction();
 
     this.corners.lowerRight.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x,
                                                                              this.shpaeWrapped.upperLeftCorner.y);
-    this.corners.lowerRight.onmouseover = () => this._cornerMouseOverAction("se-resize");
-    this.corners.lowerRight.onmouseleave = () => this._cornerMouseLeaveAction();
-    this.corners.lowerRight.onmouseup = () => this._cornerMouseUpAction();
+    this.corners.lowerRight.onmouseover = () => this._resizingMouseOVerAction("se-resize");
+    this.corners.lowerRight.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.corners.lowerRight.onmouseup = () => this._resizingMouseUpAction();
+
+    this.edges.right.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.x, true)
+    this.edges.right.onmouseover = () => this._resizingMouseOVerAction("e-resize");
+    this.edges.right.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.edges.right.onmouseup = () => this._resizingMouseUpAction();
+
+    this.edges.left.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width, true)
+    this.edges.left.onmouseover = () => this._resizingMouseOVerAction("w-resize");
+    this.edges.left.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.edges.left.onmouseup = () => this._resizingMouseUpAction();    
+
+    this.edges.up.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height, false)
+    this.edges.up.onmouseover = () => this._resizingMouseOVerAction("n-resize");
+    this.edges.up.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.edges.up.onmouseup = () => this._resizingMouseUpAction(); 
+    
+    this.edges.down.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.y, false)
+    this.edges.down.onmouseover = () => this._resizingMouseOVerAction("s-resize");
+    this.edges.down.onmouseleave = () => this._resizingMouseLeaveAction();
+    this.edges.down.onmouseup = () => this._resizingMouseUpAction(); 
   }
 
   _clickAcion(){
@@ -148,7 +201,40 @@ export class ShapeWrapper{
     }
   }
 
-  
+  //edge resizing
+  _edgeMouseDownAction(ref, lockY){
+    this.resizing = true;
+    this.disable();
+    
+    const tracker = setInterval(() => {
+      if(!this.resizing || !store.getters.boardMouseDown) {
+        clearInterval(tracker);
+        this.enable();
+      }
+      else {
+        if(lockY){ //change the width = x
+          const updatedX = window.mouseX; 
+          const newUpperLeftCornerX = Math.min(ref, updatedX);
+          const currentWidth = Math.abs(updatedX - ref);
+          this.shpaeWrapped.updateWidth(currentWidth);
+          this.updateWidth(currentWidth + 2);
+          this.shpaeWrapped.updatePos(newUpperLeftCornerX, this.shpaeWrapped.upperLeftCorner.y);
+          this.updatePos(newUpperLeftCornerX -1, this.shpaeWrapped.upperLeftCorner.y -1);
+        }
+        else{
+          const updatedY = window.mouseY - 110;
+          const newUpperLeftCornerY = Math.min(ref, updatedY);
+          const currentHeight = Math.abs(updatedY - ref);
+          this.shpaeWrapped.updateHeight(currentHeight);
+          this.updateHeight(currentHeight + 2);
+          this.shpaeWrapped.updatePos(this.shpaeWrapped.upperLeftCorner.x, newUpperLeftCornerY);
+          this.updatePos(this.shpaeWrapped.upperLeftCorner.x -1, newUpperLeftCornerY -1);
+        }
+      }
+    }, 10); 
+  }
+
+  //corner resinzing
   _cornerMouseDownAction(refX, refY){
     this.resizing = true;
     this.disable();
@@ -177,16 +263,16 @@ export class ShapeWrapper{
     }, 10); 
     
   }
-
-  _cornerMouseUpAction(){
+  //resining actions
+  _resizingMouseUpAction(){
     this.resizing = false;
   }
   
-  _cornerMouseLeaveAction(){
+  _resizingMouseLeaveAction(){
     store.commit("setResizing", false);
   }
 
-  _cornerMouseOverAction(mosueDirection){
+  _resizingMouseOVerAction(mosueDirection){
     store.commit("setResizing", true);
     store.commit("setDirection", mosueDirection);
   }
@@ -240,5 +326,55 @@ export class ShapeWrapper{
     prevSelector.mouseDown = false;
     if(prevSelector.id !== this.id) prevSelector.clicked = false;
     store.commit('setSelector', this);
+  }
+
+  //calculations
+  getCornersCoordinates(){
+    return {
+      upperLeftCorner: {
+        x: this.startingPos.x,
+        y: this.startingPos.y,
+      },
+
+      upperRightcorner: {
+        x: this.startingPos.x + this.width,
+        y: this.startingPos.y,
+      },
+
+      lowerLeftCorner: {
+        x: this.startingPos.x,
+        y: this.startingPos.y + this.height,
+      },
+
+      lowerRightCorner: {
+        x: this.startingPos.x + this.width,
+        y: this.startingPos.y + this.height,
+      },
+    }
+  }
+
+  getEdgesMiddlePoints(){
+    const corners = this.getCornersCoordinates();
+    return {
+      leftEdge: {
+        x: (corners.upperLeftCorner.x + corners.lowerLeftCorner.x) / 2,
+        y: (corners.upperLeftCorner.y + corners.lowerLeftCorner.y) / 2,
+      },
+  
+      rightEdge: {
+        x: (corners.upperRightcorner.x + corners.lowerRightCorner.x) / 2,
+        y: (corners.upperRightcorner.y + corners.lowerRightCorner.y) / 2,
+      },
+  
+      upperEdge: {
+        x: (corners.upperLeftCorner.x + corners.upperRightcorner.x) / 2,
+        y: (corners.upperLeftCorner.y + corners.upperRightcorner.y) / 2,
+      },
+  
+      lowerEdge: {
+        x: (corners.lowerLeftCorner.x + corners.lowerRightCorner.x) / 2,
+        y: (corners.lowerLeftCorner.y + corners.lowerRightCorner.y) / 2,
+      },
+    }
   }
 }

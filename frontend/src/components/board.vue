@@ -252,6 +252,17 @@ export default {
 .se-resize-pointer{
   cursor: se-resize;
 }
-
+.e-resize-pointer{
+  cursor: e-resize;
+}
+.w-resize-pointer{
+  cursor: w-resize;
+}
+.n-resize-pointer{
+  cursor: n-resize;
+}
+.s-resize-pointer{
+  cursor: s-resize;
+}
 
 </style>
