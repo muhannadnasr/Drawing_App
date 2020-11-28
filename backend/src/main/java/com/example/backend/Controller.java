@@ -16,7 +16,7 @@ public class Controller {
     public void addUndo(Shape shape){
         Shape clone;
         try{
-            clone = (Shape)shape.clone();
+            clone = shape.clone();
             undo.push(clone);
         }catch(Exception e){
             e.printStackTrace();

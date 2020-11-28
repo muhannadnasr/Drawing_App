@@ -22,13 +22,10 @@ public abstract class Shape implements Cloneable{
     }
 
     @Override
-	protected Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
-
-    public void setID(Integer ID){
-        this.ID = ID;
+	protected Shape clone() throws CloneNotSupportedException {
+        return (Shape) super.clone();
     }
+
     public Integer getID(){
         return ID;
     }
@@ -99,7 +96,7 @@ public abstract class Shape implements Cloneable{
     public void setContainerHeight(Double height){
         this.containerHeight = height;
     }
-    public double getContainerHeight(){
+    public Double getContainerHeight(){
         return this.containerHeight;
     }
 
@@ -110,6 +107,8 @@ public abstract class Shape implements Cloneable{
         return this.containerWidth;
     }
 
+    //abstract methods
     public abstract void changeSize(Double length1, Double length2, Point[]points);
     public abstract void changePosition(Point startingPosition, Point[]points);
+    public abstract Point getStartingPosition();
 }

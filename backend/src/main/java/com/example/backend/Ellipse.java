@@ -10,7 +10,7 @@ public class Ellipse extends Shape{
         this.radiusX = radiusX;
         this.radiusY = radiusY;
         this.center = center;
-    }   
+    }
 
     private void setRadiusX(double r){
         this.radiusX = r;
@@ -29,7 +29,7 @@ public class Ellipse extends Shape{
     private void setCenter(Point p){
         this.center = p;
     }
-    public Point getCenter(){
+    private Point getCenter(){
         return this.center;
     }
 
@@ -40,5 +40,9 @@ public class Ellipse extends Shape{
     
     public void changePosition(Point startingPosition, Point[]points){
         this.setCenter(startingPosition);
+    }
+
+    public Point getStartingPosition() {
+        return this.getCenter();
     }
 }

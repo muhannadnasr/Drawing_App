@@ -9,11 +9,12 @@ export class LineWrapper{
     this.board = document.getElementById("board");
     this.wrapper = null;
     this.pointsSelectors = {
-      pointA: null,
-      pointB: null,
+      startingPoint: null,
+      endingPoint: null,
     };
     this.clicked = true;
     this.mouseDown = false;
+    this.resizing = false;
     this._createLineWrapper();
     this._addEventHandlers();
   }
@@ -80,15 +81,15 @@ export class LineWrapper{
   }
  
   _createPointsSelectors(){
-    this.pointsSelectors.pointA = this._createPointSelector(this.lineWrapped.startingPoint.x, this.lineWrapped.startingPoint.y)
-    this.pointsSelectors.pointB = this._createPointSelector(this.lineWrapped.endingPoint.x, this.lineWrapped.endingPoint.y)
+    this.pointsSelectors.startingPoint = this._createPointSelector(this.lineWrapped.startingPoint.x, this.lineWrapped.startingPoint.y)
+    this.pointsSelectors.endingPoint = this._createPointSelector(this.lineWrapped.endingPoint.x, this.lineWrapped.endingPoint.y)
   }
 
   updatePointsSelectors(){
-    this.pointsSelectors.pointA.setAttribute("cx", this.lineWrapped.startingPoint.x);
-    this.pointsSelectors.pointA.setAttribute("cy", this.lineWrapped.startingPoint.y);
-    this.pointsSelectors.pointB.setAttribute("cx", this.lineWrapped.endingPoint.x);
-    this.pointsSelectors.pointB.setAttribute("cy", this.lineWrapped.endingPoint.y);
+    this.pointsSelectors.startingPoint.setAttribute("cx", this.lineWrapped.startingPoint.x);
+    this.pointsSelectors.startingPoint.setAttribute("cy", this.lineWrapped.startingPoint.y);
+    this.pointsSelectors.endingPoint.setAttribute("cx", this.lineWrapped.endingPoint.x);
+    this.pointsSelectors.endingPoint.setAttribute("cy", this.lineWrapped.endingPoint.y);
   }
   removeWrapper(){
     this.wrapper.remove();
@@ -98,6 +99,16 @@ export class LineWrapper{
     this.wrapper.onclick = () => this._clickAcion();
     this.wrapper.onmousedown = () => this._mouseDownAction();
     this.wrapper.onmouseup = () => this._mouseUpAction();
+
+    this.pointsSelectors.startingPoint.onmousedown = () => this._changeStartingPoint();
+    this.pointsSelectors.startingPoint.onmouseover = () => this._pointSelectorMouseOverAction();
+    this.pointsSelectors.startingPoint.onmouseup = () => this._pointSelectorMouseUpAction();
+    this.pointsSelectors.startingPoint.onmouseleave = () => this._piontSelectorMouseLeaveAction();
+
+    this.pointsSelectors.endingPoint.onmousedown = () => this._changeEndingPoint();
+    this.pointsSelectors.endingPoint.onmouseover = () => this._pointSelectorMouseOverAction();
+    this.pointsSelectors.endingPoint.onmouseup = () => this._pointSelectorMouseUpAction();
+    this.pointsSelectors.endingPoint.onmouseleave = () => this._piontSelectorMouseLeaveAction();
   }
 
   _clickAcion(){
@@ -110,9 +121,58 @@ export class LineWrapper{
       this.disable();
     }
   }
+  //Resizing shape
+  _changeStartingPoint(){
+    this.resizing = true;
+    this.disable();
+    
+    const tracker = setInterval(() => {
+      if(!this.resizing || !store.getters.boardMouseDown) {
+        clearInterval(tracker);
+        this.enable();
+      }
+      else {
+        const updatedX = window.mouseX 
+        const updatedY = window.mouseY - 110;
+        this.lineWrapped.updateStartingPos(updatedX, updatedY);
+        this.update();
+      }
+    }, 10); 
+  }
 
+  _changeEndingPoint(){
+    this.resizing = true;
+    this.disable();
+    
+    const tracker = setInterval(() => {
+      if(!this.resizing || !store.getters.boardMouseDown) {
+        clearInterval(tracker);
+        this.enable();
+      }
+      else {
+        const updatedX = window.mouseX 
+        const updatedY = window.mouseY - 110;
+        this.lineWrapped.updateEndingPos(updatedX, updatedY);
+        this.update();
+      }
+    }, 10); 
+  }
+
+  _pointSelectorMouseUpAction(){
+    this.resizing = false;
+  }
+  
+  _piontSelectorMouseLeaveAction(){
+    store.commit("setResizing", false);
+  }
+
+  _pointSelectorMouseOverAction(mosueDirection){
+    store.commit("setResizing", true);
+    store.commit("setDirection", mosueDirection);
+  }
+
+  //moving Shape
   _mouseDownAction(){
-    // if(!this.clicked) return;
     this.mouseDown = true;
     this._trackMovement();
   }
@@ -121,7 +181,6 @@ export class LineWrapper{
     this.mouseDown = false;
   }
   
-  //moving shape
   _trackMovement(){
     let prevX = window.mouseX;
     let prevY = window.mouseY - 110;
@@ -147,14 +206,16 @@ export class LineWrapper{
   }
   //sub actions
   disable(){
-    this.mouseDown = false;
+    this.pointsSelectors.startingPoint.style.fill = 'none';
+    this.pointsSelectors.endingPoint.style.fill = 'none';
   }
   enable(){
-    return;
+    this.pointsSelectors.startingPoint.style.fill = '#4262ff';
+    this.pointsSelectors.endingPoint.style.fill = '#4262ff';
   }
   disablePrevSelector(){
     const prevSelector = store.getters.currentSelector;
-    prevSelector.disable();
+    prevSelector.mouseDown = false;
     if(prevSelector.id !== this.id) prevSelector.clicked = false;
     store.commit('setSelector', this);
   }

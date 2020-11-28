@@ -12,25 +12,25 @@ public class Rectangle extends Shape{
         this.upperLeftCornerPoint = upperLeftCorner;
     }
 
-    private void setHeight(double h){
-        this.height = h ;
+    private void setHeight(double height){
+        this.height = height ;
     }
     public double getHeight(){
         return this.height;
     }
 
     
-    private void setWidth(double w){
-        this.width = w ;
+    private void setWidth(double width){
+        this.width = width ;
     }
     public double getWidth(){
         return this.width;
     }
 
-    private void setUpperLeftCorner(Point p){
-        this.upperLeftCornerPoint = p ;
+    private void setUpperLeftCorner(Point upperLeftCorner){
+        this.upperLeftCornerPoint = upperLeftCorner ;
     }
-    public Point getUpperLeftCorner(){
+    private Point getUpperLeftCorner(){
         return this.upperLeftCornerPoint;
     }
     
@@ -38,7 +38,12 @@ public class Rectangle extends Shape{
         this.setHeight(length1);
         this.setWidth(length2);
     }
+
     public void changePosition(Point startingPosition, Point[]points){
         this.setUpperLeftCorner(startingPosition);
+    }
+
+    public Point getStartingPosition(){
+        return this.getUpperLeftCorner();
     }
 }
