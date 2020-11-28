@@ -4,7 +4,7 @@ public abstract class Shape implements Cloneable{
     private int id;
     private String type;
     private double angle = 0;
-    private RGB fillColor;
+    private String fillColor;
     private double fillOpacity;
     private double thickness;
     private int z;
@@ -37,10 +37,10 @@ public abstract class Shape implements Cloneable{
         return angle;
     }
 
-    public void setFillColor(RGB fillColor){
+    public void setFillColor(String fillColor){
         this.fillColor = fillColor;
     }
-    public RGB getFillColor(){
+    public String getFillColor(){
         return fillColor;
     }
 

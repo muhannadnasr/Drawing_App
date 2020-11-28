@@ -39,7 +39,7 @@ public class Api {
         shape.setAngle(angle);
         refreshShape(ID, shape);
     }
-    public void changeFillSpecs(int id,RGB fillColor ,double opacity){
+    public void changeFillSpecs(int id,String fillColor ,double opacity){
         Shape shape = getShape(id);
         shape.setFillColor(fillColor);
         shape.setFillOpacity(opacity);
@@ -78,7 +78,7 @@ public class Api {
         multiPointShape.setHeight(height);
         refreshShape(id, multiPointShape);
     }
-    public void changeOutlineSpecs(int id, RGB outlineColor, double opacity){
+    public void changeOutlineSpecs(int id, String  outlineColor, double opacity){
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
         multiPointShape.setOutlineColor(outlineColor);
         multiPointShape.setOutlineOpacity(opacity);
