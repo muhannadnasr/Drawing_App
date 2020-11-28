@@ -4,13 +4,15 @@ public abstract class Shape implements Cloneable{
 
     private Integer ID = null;
     private Point containerUpperLeftCorner;
-    private Double containerHeight;
-    private Double containerWidth;
+    private double containerHeight;
+    private double containerWidth;
     private String type = null;
     private double angle = 0;
-    private RGB outlineColor;
     private RGB fillInColor;
-    private int thickness;
+    private double fillOpacity;
+    private RGB outlineColor;
+    private int outlineThickness;
+    private double outlineOpacity;
     private String text = null;
     private int z;
 
@@ -27,7 +29,6 @@ public abstract class Shape implements Cloneable{
     public void setID(Integer ID){
         this.ID = ID;
     }
-
     public Integer getID(){
         return ID;
     }
@@ -35,7 +36,6 @@ public abstract class Shape implements Cloneable{
     public void setType(String type){
         this.type = type;
     }
-
     public String getType(){
         return type;
     }
@@ -43,7 +43,6 @@ public abstract class Shape implements Cloneable{
     public void setAngle(double angle){
         this.angle = angle;
     }
-
     public double getAngle(){
         return angle;
     }   
@@ -51,7 +50,6 @@ public abstract class Shape implements Cloneable{
     public void setOutlineColor(RGB outlineColor){
         this.outlineColor = outlineColor;
     }
-
     public RGB getOutlineColor(){
         return outlineColor;
     }
@@ -59,23 +57,27 @@ public abstract class Shape implements Cloneable{
     public void setFillInColor(RGB fillInColor){
         this.fillInColor = fillInColor;
     }
-
     public RGB getFillInColor(){
         return fillInColor;
     }
 
-    public void setThickness(int thickness){
-        this.thickness = thickness;
+    public double getFillOpacity() { return fillOpacity; }
+
+    public void setFillOpacity(double fillOpacity) { this.fillOpacity = fillOpacity; }
+
+    public void setOutlineThickness(int outlineThickness){
+        this.outlineThickness = outlineThickness;
+    }
+    public int getOutlineThickness(){
+        return outlineThickness;
     }
 
-    public int getThickness(){
-        return thickness;
-    }
+    public double getOutlineOpacity() { return outlineOpacity; }
+    public void setOutlineOpacity(double outlineOpacity) { this.outlineOpacity = outlineOpacity; }
 
     public void setText(String text){
         this.text = text;
     }
-
     public String getText(){
         return text;
     }
@@ -83,7 +85,6 @@ public abstract class Shape implements Cloneable{
     public void setZ(int z){
         this.z = z;
     }
-
     public int getZ(){
         return z;
     }
@@ -91,7 +92,6 @@ public abstract class Shape implements Cloneable{
     public void setContainerUpperLeftCorner(Point point){
         this.containerUpperLeftCorner = point;
     }
-
     public Point getContainerUpperLeftCorner(){
         return this.containerUpperLeftCorner;
     }
@@ -99,16 +99,14 @@ public abstract class Shape implements Cloneable{
     public void setContainerHeight(Double height){
         this.containerHeight = height;
     }
-
-    public Double getContainerHeight(){
+    public double getContainerHeight(){
         return this.containerHeight;
     }
 
     public void setContainerWidth(Double width){
         this.containerWidth = width;
     }
-
-    public Double setContainerWidth(){
+    public double getContainerWidth(){
         return this.containerWidth;
     }
 

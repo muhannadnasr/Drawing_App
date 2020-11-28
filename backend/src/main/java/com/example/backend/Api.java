@@ -60,7 +60,7 @@ public class Api {
     }
     public void changeThickness(Integer ID, Integer thickness){
         Shape shape = getShape(ID);
-        shape.setThickness(thickness);
+        shape.setOutlineThickness(thickness);
         refreshShape(ID, shape);
     }
     public void changeText(Integer ID, String text){

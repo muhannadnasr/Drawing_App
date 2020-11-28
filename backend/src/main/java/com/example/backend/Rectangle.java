@@ -5,14 +5,14 @@ public class Rectangle extends Shape{
     private double width ;
     private Point upperLeftCornerPoint ;
 
-    Rectangle(Integer ID, String type, double h, double w, Point p){
+    Rectangle(Integer ID, String type, double h, double w, Point upperLeftCorner){
         super(ID, type);
         this.height = h;
         this.width = w ;
-        this.upperLeftCornerPoint = p;
+        this.upperLeftCornerPoint = upperLeftCorner;
     }
 
-    public void setHeight(double h){
+    private void setHeight(double h){
         this.height = h ;
     }
     public double getHeight(){
@@ -20,14 +20,14 @@ public class Rectangle extends Shape{
     }
 
     
-    public void setWidth(double w){
+    private void setWidth(double w){
         this.width = w ;
     }
     public double getWidth(){
         return this.width;
     }
 
-    public void setUpperLeftCorner(Point p){
+    private void setUpperLeftCorner(Point p){
         this.upperLeftCornerPoint = p ;
     }
     public Point getUpperLeftCorner(){
