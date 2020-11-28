@@ -4,7 +4,7 @@
       <clipboard/>
       <deleteBtn/>
       <font/>
-      <colorStyle/>
+      <shapeFormat/>
       <draw/>
   </div>
 </template>
@@ -13,7 +13,7 @@
 import clipboard from './home-menu/clipboard.vue';
 import undoRedo from './home-menu/undoRedo.vue';
 import font from './home-menu/fontAndParagraph.vue';
-import colorStyle from './home-menu/colorPicker.vue';
+import shapeFormat from './home-menu/shapeFormat.vue';
 import deleteBtn from './home-menu/delete.vue';
 import draw from './home-menu/draw.vue';
 export default {
@@ -22,7 +22,7 @@ export default {
     undoRedo,
     clipboard,
     font,
-    colorStyle,
+    shapeFormat,
     deleteBtn,
     draw,
   },
