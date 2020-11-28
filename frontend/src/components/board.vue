@@ -240,29 +240,17 @@ export default {
   cursor: crosshair;
 }
 
-.ne-resize-pointer{
-  cursor: ne-resize;
+.nwse-resize-pointer{
+  cursor: nwse-resize;
 }
-.nw-resize-pointer{
-  cursor: nw-resize;
+.nesw-resize-pointer{
+  cursor: nesw-resize;
 }
-.sw-resize-pointer{
-  cursor: sw-resize;
+.ew-resize-pointer{
+  cursor: ew-resize;
 }
-.se-resize-pointer{
-  cursor: se-resize;
-}
-.e-resize-pointer{
-  cursor: e-resize;
-}
-.w-resize-pointer{
-  cursor: w-resize;
-}
-.n-resize-pointer{
-  cursor: n-resize;
-}
-.s-resize-pointer{
-  cursor: s-resize;
+.ns-resize-pointer{
+  cursor: ns-resize;
 }
 
 </style>

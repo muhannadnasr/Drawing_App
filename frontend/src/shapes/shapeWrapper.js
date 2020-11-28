@@ -146,45 +146,45 @@ export class ShapeWrapper{
 
     this.corners.upperLeft.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width,
                                                                             this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height);
-    this.corners.upperLeft.onmouseover = () => this._resizingMouseOVerAction("nw-resize");
+    this.corners.upperLeft.onmouseover = () => this._resizingMouseOVerAction("nwse-resize");
     this.corners.upperLeft.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.upperLeft.onmouseup = () => this._resizingMouseUpAction();
 
     this.corners.upperRight.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x,
                                                                              this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height);
-    this.corners.upperRight.onmouseover = () => this._resizingMouseOVerAction("ne-resize");
+    this.corners.upperRight.onmouseover = () => this._resizingMouseOVerAction("nesw-resize");
     this.corners.upperRight.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.upperRight.onmouseup = () => this._resizingMouseUpAction();
 
     this.corners.lowerLeft.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width,
                                                                             this.shpaeWrapped.upperLeftCorner.y);
-    this.corners.lowerLeft.onmouseover = () => this._resizingMouseOVerAction("sw-resize");
+    this.corners.lowerLeft.onmouseover = () => this._resizingMouseOVerAction("nesw-resize");
     this.corners.lowerLeft.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.lowerLeft.onmouseup = () => this._resizingMouseUpAction();
 
     this.corners.lowerRight.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x,
                                                                              this.shpaeWrapped.upperLeftCorner.y);
-    this.corners.lowerRight.onmouseover = () => this._resizingMouseOVerAction("se-resize");
+    this.corners.lowerRight.onmouseover = () => this._resizingMouseOVerAction("nwse-resize");
     this.corners.lowerRight.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.lowerRight.onmouseup = () => this._resizingMouseUpAction();
 
     this.edges.right.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.x, true)
-    this.edges.right.onmouseover = () => this._resizingMouseOVerAction("e-resize");
+    this.edges.right.onmouseover = () => this._resizingMouseOVerAction("ew-resize");
     this.edges.right.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.right.onmouseup = () => this._resizingMouseUpAction();
 
     this.edges.left.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width, true)
-    this.edges.left.onmouseover = () => this._resizingMouseOVerAction("w-resize");
+    this.edges.left.onmouseover = () => this._resizingMouseOVerAction("ew-resize");
     this.edges.left.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.left.onmouseup = () => this._resizingMouseUpAction();    
 
     this.edges.up.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height, false)
-    this.edges.up.onmouseover = () => this._resizingMouseOVerAction("n-resize");
+    this.edges.up.onmouseover = () => this._resizingMouseOVerAction("ns-resize");
     this.edges.up.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.up.onmouseup = () => this._resizingMouseUpAction(); 
     
     this.edges.down.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.y, false)
-    this.edges.down.onmouseover = () => this._resizingMouseOVerAction("s-resize");
+    this.edges.down.onmouseover = () => this._resizingMouseOVerAction("ns-resize");
     this.edges.down.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.down.onmouseup = () => this._resizingMouseUpAction(); 
   }
@@ -308,17 +308,29 @@ export class ShapeWrapper{
   //sub actions
   disable(){
     this.wrapper.style.stroke = 'none';  
+
     this.corners.upperLeft.style.fill = 'none';
     this.corners.upperRight.style.fill = 'none';
     this.corners.lowerLeft.style.fill = 'none';
     this.corners.lowerRight.style.fill = 'none';
+
+    this.edges.left.style.fill = 'none';
+    this.edges.right.style.fill = 'none';
+    this.edges.up.style.fill = 'none';
+    this.edges.down.style.fill = 'none';
   }
   enable(){
     this.wrapper.style.stroke = '#4262ff'; 
+
     this.corners.upperLeft.style.fill = '#4262ff';
     this.corners.upperRight.style.fill = '#4262ff';
     this.corners.lowerLeft.style.fill = '#4262ff';
     this.corners.lowerRight.style.fill = '#4262ff'; 
+
+    this.edges.left.style.fill = '#4262ff';
+    this.edges.right.style.fill = '#4262ff';
+    this.edges.up.style.fill = '#4262ff';
+    this.edges.down.style.fill = '#4262ff';
   }
   disablePrevSelector(){
     const prevSelector = store.getters.currentSelector;
