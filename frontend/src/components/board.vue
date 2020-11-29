@@ -57,9 +57,9 @@ export default {
       }
     }
   },
-  computed: mapGetters(['isDrawing', 'shapeType', 'isResizing', 'resizingDirection']),
+  computed: mapGetters(['isDrawing', 'shapeType', 'isResizing', 'resizingDirection', 'currentSelector']),
   methods:{
-    ...mapActions(['disableDrawingMode', 'setCurrentSelector', 'setBoardMouseDown']),
+    ...mapActions(['disableDrawingMode', 'setCurrentSelector', 'setBoardMouseDown', 'setSelecitngStatus']),
     //Drawing Shapes
     mouseOverHandling(){
       const mousePosTracker = setInterval(() => {
@@ -71,6 +71,14 @@ export default {
     },
     mouseDownHandling(){
       this.setBoardMouseDown(true);
+      if(this.currentSelector !== null) {
+        if(!this.currentSelector.wrapper.matches(':hover')){
+          this.currentSelector.disable();
+          this.currentSelector.clicked = false;
+        }
+        this.setSelecitngStatus(false);
+      }
+
       if (this.isDrawing) {
         this.boardProbs.mouseDown = true;
         this.setStartingPos();
@@ -122,6 +130,7 @@ export default {
           this.setCurrentSelector(this.currentShape.shape.selector);
         }
         this.disableDrawingMode();
+        this.setSelecitngStatus(true);
       }
       this.setBoardMouseDown(false);
     },

@@ -4,15 +4,17 @@ import {generateShapeId} from "../helpers.js";
 import gsap from 'gsap';
 
 export class Line {
-    constructor(x, y, shpaeType) {
+    constructor(x, y, shapeType) {
       this.shapeId = generateShapeId();
-      this.shpaeType = shpaeType;
-      this.cssId = `${shpaeType}-${this.shapeId}`;
+      this.shapeType = shapeType;
+      this.cssId = `${shapeType}-${this.shapeId}`;
       this.shape = null;
       this.startingPoint = { x: x, y: y};
       this.endingPoint = { x: x, y: y};
-      this.color = rgb(27, 27, 27);
+      this.fill = rgb(27, 27, 27);
       this.thickness = 1;
+      this.selector = null;
+      this.zIndex = 1;
     }
     create(startingX, startingY, endingX, endingY) {
       this.startingPoint.x = startingX;
@@ -26,13 +28,14 @@ export class Line {
       gsap.set(newLine, {
         attr: {
           points: this._loadPoints(),
-          fill: 'none', stroke: this.color,
+          fill: 'none', stroke: this.fill,
           'stroke-width': this.thickness, class: "line", id: this.cssId
         }
       });
       board.appendChild(newLine);
       this.shape = document.getElementById(this.cssId);
-      this.shape.style.zIndex = getZIndex();
+      this.zIndex = getZIndex();
+      this.shape.style.zIndex = this.zIndex;
       // this.addHandlers();
     }
     updatePoints(){
@@ -48,11 +51,13 @@ export class Line {
       this.endingPoint.y = y;
       this.updatePoints();
     }
-    updateColor(rgbColor) {
-      this.color = rgbColor;
+    updateFillColor(rgbColor) {
+      if (rgbColor === 'transparent') return;
+      this.fill = rgbColor;
       this.shape.setAttribute("stroke", rgbColor);
     }
     updateThickness(thickness) {
+      if(thickness < 1) return;
       this.thickness = thickness;
       this.shape.setAttribute("stroke-width", thickness);
     }

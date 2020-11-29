@@ -32,8 +32,8 @@ export class Triangle extends Shape{
     });
     board.appendChild(newTriangle);
     this.shape = document.getElementById(this.cssId);
-    this.shape.style.zIndex = getZIndex();
-    // this.addHandlers();
+    this.zIndex = getZIndex();
+    this.shape.style.zIndex = this.zIndex;
   }
   updateWidth(width) {
     this._changeWidthValue(width);

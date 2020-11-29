@@ -50,59 +50,6 @@ export class Square extends Shape{
     this.shape.setAttribute("rx", roundValue);
     this.shape.setAttribute("ry", roundValue);
   }
-  // addHandlers() {
-  //   const square = this;
-  //   let mousePosTracker = null;
-  //   const board = document.getElementById("board");
-  //   this.shape.onmouseover = function () {
-  //     mousePosTracker = setInterval(() => {
-  //       const leftEdge = square.startingCoordinate.x;
-  //       const rightEdge = leftEdge + square.width;
-  //       const upperEdge = square.startingCoordinate.y;
-  //       const lowerEdge = upperEdge + square.height;
-
-  //       const leftEdgeFromMouse = Math.abs(window.mouseX - leftEdge);
-  //       const rightEdgeFromMosue = Math.abs(window.mouseX - rightEdge);
-  //       const upperEdgeFromMouse = Math.abs(window.mouseY - 110 - upperEdge);
-  //       const lowerEdgeFromMouse = Math.abs(window.mouseY - 110 - lowerEdge);
-
-  //       if (square.mouseNearEdge(leftEdgeFromMouse) && square.mouseNearEdge(upperEdgeFromMouse)) {
-  //         board.style.cursor = "nw-resize";
-  //       }
-  //       else if (square.mouseNearEdge(leftEdgeFromMouse) && square.mouseNearEdge(lowerEdgeFromMouse)) {
-  //         board.style.cursor = "sw-resize";
-  //       }
-  //       else if (square.mouseNearEdge(rightEdgeFromMosue) && square.mouseNearEdge(upperEdgeFromMouse)) {
-  //         board.style.cursor = "ne-resize";
-  //       }
-  //       else if (square.mouseNearEdge(rightEdgeFromMosue) && square.mouseNearEdge(lowerEdgeFromMouse)) {
-  //         board.style.cursor = "se-resize";
-  //       }
-  //       else if (square.mouseNearEdge(leftEdgeFromMouse)) {
-  //         board.style.cursor = "w-resize";
-  //       }
-  //       else if (square.mouseNearEdge(rightEdgeFromMosue)) {
-  //         board.style.cursor = "e-resize";
-  //       }
-  //       else if (square.mouseNearEdge(upperEdgeFromMouse)) {
-  //         board.style.cursor = "n-resize";
-  //       }
-  //       else if (square.mouseNearEdge(lowerEdgeFromMouse)) {
-  //         board.style.cursor = "s-resize";
-  //       }
-  //       else
-  //         board.style.cursor = "default";
-  //     }, 100);
-  //   };
-  //   this.shape.onmouseleave = function () {
-  //     clearInterval(mousePosTracker);
-  //     board.style.cursor = "default";
-  //   };
-  // }
-  // mouseNearEdge(dist) {
-  //   if (dist <= 15 && dist >= 0)
-  //     return true;
-  // }
 }
 
 

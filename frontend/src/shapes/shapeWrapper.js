@@ -5,7 +5,7 @@ import store from "../store";
 export class ShapeWrapper{
   constructor(shape){
     this.id = shape.shapeId;
-    this.shpaeWrapped = shape;  
+    this.shapeWrapped = shape;  
     this.board = document.getElementById("board");
     this.wrapper = null;
     this.corners = {
@@ -34,21 +34,21 @@ export class ShapeWrapper{
     const svgns = "http://www.w3.org/2000/svg"; //variable for the namespace
     const selectionWrapper = document.createElementNS(svgns, "rect");
 
-    this.startingPos.x = this.shpaeWrapped.upperLeftCorner.x -1;
-    this.startingPos.y = this.shpaeWrapped.upperLeftCorner.y -1;
-    this.width = this.shpaeWrapped.width + 2;
-    this.height = this.shpaeWrapped.height + 2;
+    this.startingPos.x = this.shapeWrapped.upperLeftCorner.x -1;
+    this.startingPos.y = this.shapeWrapped.upperLeftCorner.y -1;
+    this.width = this.shapeWrapped.width + 2;
+    this.height = this.shapeWrapped.height + 2;
 
     gsap.set(selectionWrapper, {
     attr: {
         x: this.startingPos.x, y: this.startingPos.y, rx: 0, ry: 0,
         width: this.width, height: this.height,
         fill: 'transparent', stroke: "#4262ff",
-        'stroke-width': 1, id: `shape-selector-${this.shpaeWrapped.cssId}`
+        'stroke-width': 1, id: `shape-selector-${this.shapeWrapped.cssId}`
         }
     });
     this.board.appendChild(selectionWrapper);
-    selectionWrapper.style.zIndex = this.shpaeWrapped.zIndex;
+    selectionWrapper.style.zIndex = this.shapeWrapped.zIndex;
     selectionWrapper.style.userSelect = 'none';
 
     this.wrapper = selectionWrapper;
@@ -64,11 +64,11 @@ export class ShapeWrapper{
     attr: {
         cx: centerX, cy: centerY, r: 4,
         fill: '#4262ff', stroke: "none",
-        'stroke-width': 0, class: `selector-corner-${this.shpaeWrapped.cssId}`
+        'stroke-width': 0, class: `selector-corner-${this.shapeWrapped.cssId}`
         }
     });
     this.board.appendChild(cornerSelector);
-    cornerSelector.style.zIndex = this.shpaeWrapped.zIndex;
+    cornerSelector.style.zIndex = this.shapeWrapped.zIndex;
     cornerSelector.style.userSelect = 'none';
 
     return cornerSelector;
@@ -93,8 +93,8 @@ export class ShapeWrapper{
   updatePos(x, y){
     this.startingPos.x = x;
     this.startingPos.y = y;
-    this.wrapper.setAttribute("x", x);
-    this.wrapper.setAttribute("y", y);
+    this.wrapper.setAttribute("x", this.startingPos.x);
+    this.wrapper.setAttribute("y", this.startingPos.y);
     this._updateCorners();
     this._updateEgesSelectors();
   }
@@ -105,7 +105,7 @@ export class ShapeWrapper{
   }
 
   updateHeight(height){
-    this.height = height;
+    this.height = height; 
     this.wrapper.setAttribute("height", this.height);
   }
 
@@ -140,50 +140,49 @@ export class ShapeWrapper{
   }
 
   _addEventHandlers(){
-    this.wrapper.onclick = () => this._clickAcion();
     this.wrapper.onmousedown = () => this._mouseDownAction();
     this.wrapper.onmouseup = () => this._mouseUpAction();
 
-    this.corners.upperLeft.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width,
-                                                                            this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height);
+    this.corners.upperLeft.onmousedown = () => this._cornerMouseDownAction( this.shapeWrapped.upperLeftCorner.x + this.shapeWrapped.width,
+                                                                            this.shapeWrapped.upperLeftCorner.y + this.shapeWrapped.height);
     this.corners.upperLeft.onmouseover = () => this._resizingMouseOVerAction("nwse-resize");
     this.corners.upperLeft.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.upperLeft.onmouseup = () => this._resizingMouseUpAction();
 
-    this.corners.upperRight.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x,
-                                                                             this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height);
+    this.corners.upperRight.onmousedown = () => this._cornerMouseDownAction( this.shapeWrapped.upperLeftCorner.x,
+                                                                             this.shapeWrapped.upperLeftCorner.y + this.shapeWrapped.height);
     this.corners.upperRight.onmouseover = () => this._resizingMouseOVerAction("nesw-resize");
     this.corners.upperRight.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.upperRight.onmouseup = () => this._resizingMouseUpAction();
 
-    this.corners.lowerLeft.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width,
-                                                                            this.shpaeWrapped.upperLeftCorner.y);
+    this.corners.lowerLeft.onmousedown = () => this._cornerMouseDownAction( this.shapeWrapped.upperLeftCorner.x + this.shapeWrapped.width,
+                                                                            this.shapeWrapped.upperLeftCorner.y);
     this.corners.lowerLeft.onmouseover = () => this._resizingMouseOVerAction("nesw-resize");
     this.corners.lowerLeft.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.lowerLeft.onmouseup = () => this._resizingMouseUpAction();
 
-    this.corners.lowerRight.onmousedown = () => this._cornerMouseDownAction( this.shpaeWrapped.upperLeftCorner.x,
-                                                                             this.shpaeWrapped.upperLeftCorner.y);
+    this.corners.lowerRight.onmousedown = () => this._cornerMouseDownAction( this.shapeWrapped.upperLeftCorner.x,
+                                                                             this.shapeWrapped.upperLeftCorner.y);
     this.corners.lowerRight.onmouseover = () => this._resizingMouseOVerAction("nwse-resize");
     this.corners.lowerRight.onmouseleave = () => this._resizingMouseLeaveAction();
     this.corners.lowerRight.onmouseup = () => this._resizingMouseUpAction();
 
-    this.edges.right.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.x, true)
+    this.edges.right.onmousedown = () => this._edgeMouseDownAction(this.shapeWrapped.upperLeftCorner.x, true)
     this.edges.right.onmouseover = () => this._resizingMouseOVerAction("ew-resize");
     this.edges.right.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.right.onmouseup = () => this._resizingMouseUpAction();
 
-    this.edges.left.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.x + this.shpaeWrapped.width, true)
+    this.edges.left.onmousedown = () => this._edgeMouseDownAction(this.shapeWrapped.upperLeftCorner.x + this.shapeWrapped.width, true)
     this.edges.left.onmouseover = () => this._resizingMouseOVerAction("ew-resize");
     this.edges.left.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.left.onmouseup = () => this._resizingMouseUpAction();    
 
-    this.edges.up.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.y + this.shpaeWrapped.height, false)
+    this.edges.up.onmousedown = () => this._edgeMouseDownAction(this.shapeWrapped.upperLeftCorner.y + this.shapeWrapped.height, false)
     this.edges.up.onmouseover = () => this._resizingMouseOVerAction("ns-resize");
     this.edges.up.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.up.onmouseup = () => this._resizingMouseUpAction(); 
     
-    this.edges.down.onmousedown = () => this._edgeMouseDownAction(this.shpaeWrapped.upperLeftCorner.y, false)
+    this.edges.down.onmousedown = () => this._edgeMouseDownAction(this.shapeWrapped.upperLeftCorner.y, false)
     this.edges.down.onmouseover = () => this._resizingMouseOVerAction("ns-resize");
     this.edges.down.onmouseleave = () => this._resizingMouseLeaveAction();
     this.edges.down.onmouseup = () => this._resizingMouseUpAction(); 
@@ -194,10 +193,12 @@ export class ShapeWrapper{
     if(this.clicked){
       this.disablePrevSelector();
       this.enable();
+      store.commit('setSelecting', true);
     }
     else{
       this.disable();
       this.mouseDown = false;
+      store.commit('setSelecting', false);
     }
   }
 
@@ -216,19 +217,19 @@ export class ShapeWrapper{
           const updatedX = window.mouseX; 
           const newUpperLeftCornerX = Math.min(ref, updatedX);
           const currentWidth = Math.abs(updatedX - ref);
-          this.shpaeWrapped.updateWidth(currentWidth);
+          this.shapeWrapped.updateWidth(currentWidth);
           this.updateWidth(currentWidth + 2);
-          this.shpaeWrapped.updatePos(newUpperLeftCornerX, this.shpaeWrapped.upperLeftCorner.y);
-          this.updatePos(newUpperLeftCornerX -1, this.shpaeWrapped.upperLeftCorner.y -1);
+          this.shapeWrapped.updatePos(newUpperLeftCornerX, this.shapeWrapped.upperLeftCorner.y);
+          this.updatePos(newUpperLeftCornerX -1, this.shapeWrapped.upperLeftCorner.y -1);
         }
         else{
           const updatedY = window.mouseY - 110;
           const newUpperLeftCornerY = Math.min(ref, updatedY);
           const currentHeight = Math.abs(updatedY - ref);
-          this.shpaeWrapped.updateHeight(currentHeight);
+          this.shapeWrapped.updateHeight(currentHeight);
           this.updateHeight(currentHeight + 2);
-          this.shpaeWrapped.updatePos(this.shpaeWrapped.upperLeftCorner.x, newUpperLeftCornerY);
-          this.updatePos(this.shpaeWrapped.upperLeftCorner.x -1, newUpperLeftCornerY -1);
+          this.shapeWrapped.updatePos(this.shapeWrapped.upperLeftCorner.x, newUpperLeftCornerY);
+          this.updatePos(this.shapeWrapped.upperLeftCorner.x -1, newUpperLeftCornerY -1);
         }
       }
     }, 10); 
@@ -252,12 +253,12 @@ export class ShapeWrapper{
         const currentWidth = Math.abs(updatedX - refX);
         const currentHeight = Math.abs(updatedY - refY);
 
-        this.shpaeWrapped.updateWidth(currentWidth);
-        this.shpaeWrapped.updateHeight(currentHeight);
+        this.shapeWrapped.updateWidth(currentWidth);
+        this.shapeWrapped.updateHeight(currentHeight);
         this.updateWidth(currentWidth + 2);
         this.updateHeight(currentHeight + 2);
 
-        this.shpaeWrapped.updatePos(newUpperLeftCornerX, newUpperLeftCornerY);
+        this.shapeWrapped.updatePos(newUpperLeftCornerX, newUpperLeftCornerY);
         this.updatePos(newUpperLeftCornerX -1, newUpperLeftCornerY -1);
       }
     }, 10); 
@@ -279,28 +280,33 @@ export class ShapeWrapper{
   //moving the shape
   _mouseDownAction(){
     this.mouseDown = true;
+    this.disable();
     this._trackMovement();
   }
 
   _mouseUpAction(){
+    this._clickAcion();
     this.mouseDown = false;
   }
+  
   _trackMovement(){
     let prevX = window.mouseX;
     let prevY = window.mouseY - 110;
     
     const tracker = setInterval(() => {
-      if(!this.mouseDown || !store.getters.boardMouseDown) clearInterval(tracker);
+      if(!this.mouseDown || !store.getters.boardMouseDown) {
+        clearInterval(tracker);
+      }
       else {
         const updatedX = window.mouseX;
         const updatedY = window.mouseY - 110;
         const xShift = updatedX - prevX;
         const yShift = updatedY - prevY;
-        const newUpperLeftCornerX = this.shpaeWrapped.upperLeftCorner.x + xShift;
-        const newUpperLeftCornerY = this.shpaeWrapped.upperLeftCorner.y + yShift;
+        const newUpperLeftCornerX = this.shapeWrapped.upperLeftCorner.x + xShift;
+        const newUpperLeftCornerY = this.shapeWrapped.upperLeftCorner.y + yShift;
         prevX = window.mouseX;
         prevY = window.mouseY - 110;
-        this.shpaeWrapped.updatePos(newUpperLeftCornerX, newUpperLeftCornerY);
+        this.shapeWrapped.updatePos(newUpperLeftCornerX, newUpperLeftCornerY);
         this.updatePos(newUpperLeftCornerX -1, newUpperLeftCornerY -1);
       }
     }, 1); 

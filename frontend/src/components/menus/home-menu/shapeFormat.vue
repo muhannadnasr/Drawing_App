@@ -2,33 +2,54 @@
   <div id="color-style-menu">
     <div @click="activateMenu(colorFillMenu)" class="sub-elem circle-fill" id="color-fill-btn">
       <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="30px" cy="30px" r="20px" stroke="black" stroke-width="2" :style="{fill: colorFillMenu.selectedColor}"/>
+        <circle cx="30px" cy="30px" r="20px" stroke="black" stroke-width="2" :style="{fill: selectedShapeColor()}"/>
       </svg>
     </div>
 
     <div @click="activateMenu(outlineMenu)" class="sub-elem circle-outline" id="color-outline-btn">
       <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="30px" cy="30px" r="17px" :style="{stroke: outlineMenu.selectedColor}" stroke-width="10px" fill="none"/>
+        <circle cx="30px" cy="30px" r="17px" :style="{stroke: selectedShapeOutlineColor()}" stroke-width="10px" fill="none"/>
       </svg>
     </div>
 
     <div id="color-menu" class="menu-hidden">
-      <div class="color-label">Standard Colors</div>
+      <div :class="['info-label', showOpacitySlider()]">Opacity</div>
+      <div :class="['slider-wrap', showOpacitySlider()]">
+        <input id="opacity-adj" type="range" min="0" max="100" value="100" step="1" @mousedown="setOpacity()">
+        <div class="range-value" id="opacityValue">{{selectedShapeOpacity()}}</div>
+      </div>
+      <div :class="['info-label', showShapeThicknessSlider()]">Thickness</div>
+      <div :class="['slider-wrap', showShapeThicknessSlider()]">
+        <input id="shapeThickness-adj" type="range" min="0" max="30" value="1" step="1" 
+        @mousedown="setThickness()"
+        @mouseup="thicknessMouseUpAction()">
+        <div class="range-value" id="opacityValue">{{selectedShapeThickness()}}</div>
+      </div>
+      <div :class="['info-label', showLineThicknessSlider()]">Thickness</div>
+      <div :class="['slider-wrap', showLineThicknessSlider()]">
+        <input id="lineThickness-adj" type="range" min="1" max="30" value="1" step="1" 
+        @mousedown="setThickness()"
+        @mouseup="thicknessMouseUpAction()">
+        <div class="range-value" id="opacityValue">{{selectedLineThickness()}}</div>
+      </div>
+      <div class="info-label">Standard Colors</div>
       <div id="standard-colors-sec">
         <div id="no-fill-btn" @click="setNoFill()"><img src="../../../assets/colorStyle/noFill.png" width="24"></div>
         <div class="color-square" 
           v-for="(color, colorIndex) in colors" :key="colorIndex" 
           :style="{'background-color': `rgb(${color.R},${color.G},${color.B})`}"
-          @click="setColor(colorIndex)"
-      ></div>
+          @click="setColor(colorIndex)">
+        </div>
       </div>
     </div>
-
     <div class="seperator"></div>
+    <div class="label"> Shape Format</div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import { rgb } from '../../../helpers.js'
 export default {
   name: 'shapeFormat',
   props: {
@@ -70,10 +91,18 @@ export default {
         selectedColor: "black",
         id: 1,
       },
+      opacity: 1,
+      opacityText: '100%',
+      thickness: 1,
+      thicknessText: '1px',
     }
+  },
+  computed: {
+    ...mapGetters(['currentSelector', 'isSelecting', 'maxCurrZIndex']),
   },
   methods: {
     activateMenu(menu){
+      if(!this.isSelecting) return;
       if(this.prevActiveMenuId === null) {//first time to active a menu
         this.prevActiveMenuId = menu.id;
         this.toggleColorMenu(menu);
@@ -90,11 +119,13 @@ export default {
     toggleColorMenu(menu){
       menu.show = !menu.show;
 
-      if (menu.show) this.showColorMenu(menu.btnId);
-      else this.hideColorMenu();
-
       this.currActiveMenu = menu;
       this.prevActiveMenuId = menu.id;
+
+      if(menu.id === 1 && this.currentSelector.shapeWrapped.shapeType === 'line') this.hideColorMenu();
+
+      if (menu.show) this.showColorMenu(menu.btnId);
+      else this.hideColorMenu();
     },
     showColorMenu(btnId){
       const parentButton = document.getElementById(btnId);
@@ -115,19 +146,132 @@ export default {
     hideColorMenu(){
       const menu = document.getElementById("color-menu");
       menu.className = "menu-hidden";
-      this.colorFillMenu.show = false;
+      this.currActiveMenu.show = false;
     },
     setColor(colorIndex){
+      if(!this.isSelecting) return;
+
       const color = this.colors[colorIndex];
-      this.currActiveMenu.selectedColor = `rgb(${color.R},${color.G},${color.B})`;
-      this.hideColorMenu();
+      this.currActiveMenu.selectedColor = rgb(color.R, color.G, color.B);
+      if (this.currActiveMenu.id === 0) this.setShapeFillColor();
+      else if (this.currActiveMenu.id === 1) this.setShapeOutlineColor();
+    },
+    setOpacity(){
+      if(!this.isSelecting) return;
+      if(this.currActiveMenu === null) return;
+
+      const range = document.getElementById("opacity-adj");
+      const opacityTracker = setInterval( () => {
+        if(!this.isSelecting) clearInterval(opacityTracker);
+        this.opacityText = `${range.value}%`;
+        this.opacity = range.value / 100;
+        if (this.currActiveMenu.id == 0) {
+          this.setShapeFillOpacity();
+        }
+      }, 50);
     },
     setNoFill(){
       this.currActiveMenu.selectedColor = "transparent";
+      if (this.currActiveMenu.id == 0) this.setShapeFillColor();
       this.hideColorMenu();
-    }
+    },
+    setThickness(){
+      if(!this.isSelecting) return;
+      if(this.currActiveMenu === null) return;
+
+      let range = null;
+      if (this.currentSelector.shapeWrapped.shapeType === 'line'){
+        range = document.getElementById("lineThickness-adj");
+      }else{
+        range = document.getElementById("shapeThickness-adj");
+      }
+      this.currentSelector.disable();
+      const thicknessTracker = setInterval( () => {
+        if(!this.isSelecting) {
+          clearInterval(thicknessTracker);
+        }
+        this.thickness = range.value; 
+        this.thicknessText = `${range.value}px`;
+        this.setShapeThickness();
+      }, 50);
+    },
+    thicknessMouseUpAction(){
+      this.currentSelector.enable();
+    },
+
+    setShapeFillColor(){
+      if(this.isSelecting){
+        this.currentSelector.shapeWrapped.updateFillColor(this.colorFillMenu.selectedColor);
+      }
+    },
+    setShapeOutlineColor(){
+      if(this.isSelecting){
+        this.currentSelector.shapeWrapped.updateOutlineColor(this.outlineMenu.selectedColor);
+      }
+    },
+    setShapeFillOpacity(){
+      if(this.isSelecting){
+        this.currentSelector.shapeWrapped.updateFillOpacity(this.opacity);
+      }
+    },
+    setShapeThickness(){
+      if(this.isSelecting){
+        this.currentSelector.shapeWrapped.updateThickness(this.thickness);
+      }
+    },
+
+    selectedShapeColor(){
+      if(this.currentSelector === null) return rgb(27, 27, 27);
+      return this.currentSelector.shapeWrapped.fill;
+    },
+    selectedShapeOutlineColor(){
+      if(this.currentSelector === null) return rgb(27, 27, 27);
+      if (this.currentSelector.shapeWrapped.shapeType === 'line') return rgb(153, 154, 158);
+      return this.currentSelector.shapeWrapped.outline;
+    },
+    selectedShapeOpacity(){
+      if(this.currentSelector === null) return "100%";
+      document.getElementById("opacity-adj").value = Math.trunc(this.currentSelector.shapeWrapped.fillOpacity *100);
+      return `${Math.trunc(this.currentSelector.shapeWrapped.fillOpacity * 100)}%`; 
+    },
+    selectedShapeThickness(){
+      if(this.currentSelector === null) return "1px";
+      document.getElementById("shapeThickness-adj").value = this.currentSelector.shapeWrapped.thickness;
+      return `${this.currentSelector.shapeWrapped.thickness}px`;
+    },
+    selectedLineThickness(){
+      if(this.currentSelector === null) return "1px";
+      document.getElementById("lineThickness-adj").value = this.currentSelector.shapeWrapped.thickness;
+      return `${this.currentSelector.shapeWrapped.thickness}px`;
+    },
+
+    showLineThicknessSlider(){
+      if(this.currentSelector === null) return;
+      if(this.currActiveMenu === null) return
+      if( this.currentSelector.shapeWrapped.shapeType === 'line' &&
+          this.currActiveMenu.id === 0) return "slider-active";
+      return "slider-hidden"
+    },
+    showShapeThicknessSlider(){
+      if(this.currentSelector === null) return;
+      if(this.currActiveMenu === null) return
+      if(this.currActiveMenu.id === 1) return "slider-active";
+      return "slider-hidden"
+    },
+    showOpacitySlider(){
+      if(this.currentSelector === null) return;
+      if(this.currActiveMenu === null) return
+      if( this.currentSelector.shapeWrapped.shapeType !== 'line' && 
+          this.currActiveMenu.id === 0) return "slider-active";
+      return "slider-hidden";
+    },
   },
   mounted(){
+    setInterval(() => {
+      if(!this.isSelecting && this.currActiveMenu !== null){
+        this.hideColorMenu();
+      }
+    }, 100);
   }
 }
 </script>
@@ -162,9 +306,9 @@ export default {
 #color-menu{
   background-color: white;
   position: absolute;
-  height: 200px;
+  height: 185px;
   width: 150px;
-  z-index: 9999999;
+  z-index: 99999999;
 }
 
 #standard-colors-sec{
@@ -193,7 +337,7 @@ export default {
   box-shadow: 0px 5px 30px -3px whitesmoke;
 }
 
-.color-label{
+.info-label{
   margin: 5px;
   font-size: 9px;
   color: black;
@@ -211,5 +355,69 @@ export default {
   grid-column: 3/4;
   grid-row: 1/4;
   border-left: thin solid darkgray;
+}
+.label{
+  text-align: center;
+  font-size: 10px;
+  color: darkgrey;
+  grid-column: 1/3;
+  grid-row: 3/4;
+}
+
+/* sliders */
+input[type=range] {
+	-webkit-appearance: none;
+	width: 110px;
+  height: 10px;
+}
+input[type=range]:focus {
+	outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+	width: 100%;
+	height: 2px;
+	cursor: pointer;
+	background: black;
+	border-radius: 25px;
+  margin: 5px 0px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+	background: black;
+}
+input[type=range]::-webkit-slider-thumb {
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	background: black;
+	cursor: pointer;
+	-webkit-appearance: none;
+	margin-top: -4px;
+}
+
+.slider-wrap{
+	width: 150px;
+	position: relative;
+  display: flex;
+  margin: 5px;
+  align-items: center;
+}
+
+.range-value{
+	position: relative;
+  width: 30px;
+	height: 14px;
+  text-align: center;
+	background: white;
+	color: black;
+	font-size: 10px;
+}
+
+.slider-hidden{
+  visibility: hidden;
+  display: none;
+}
+.slider-active{
+  visibility: visible;
+  display: flex;
 }
 </style>

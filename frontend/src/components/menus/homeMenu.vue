@@ -3,7 +3,6 @@
       <undoRedo/>
       <clipboard/>
       <deleteBtn/>
-      <font/>
       <shapeFormat/>
       <draw/>
   </div>
@@ -12,7 +11,6 @@
 <script>
 import clipboard from './home-menu/clipboard.vue';
 import undoRedo from './home-menu/undoRedo.vue';
-import font from './home-menu/fontAndParagraph.vue';
 import shapeFormat from './home-menu/shapeFormat.vue';
 import deleteBtn from './home-menu/delete.vue';
 import draw from './home-menu/draw.vue';
@@ -21,7 +19,6 @@ export default {
   components: {
     undoRedo,
     clipboard,
-    font,
     shapeFormat,
     deleteBtn,
     draw,

@@ -1,3 +1,5 @@
+import store from "./store"
+
 export function rgb(R, G, B){
   return `rgb(${R},${G},${B})`;
 }
@@ -7,7 +9,8 @@ export function generateShapeId(){
   return shapeId++;
 }
 
-let zIndex = 2;
 export function getZIndex(){
-  return zIndex++;
+  const newZIndex = store.getters.maxCurrZIndex;
+  store.commit("setMaxZIndex", newZIndex +1)
+  return newZIndex;
 }

@@ -5,7 +5,7 @@ import store from "../store";
 export class LineWrapper{
   constructor(line){
     this.id = line.shapeId;
-    this.lineWrapped = line;  
+    this.shapeWrapped = line;  
     this.board = document.getElementById("board");
     this.wrapper = null;
     this.pointsSelectors = {
@@ -26,7 +26,7 @@ export class LineWrapper{
     this._setWrapper(selectionWrapper);
     
 		this.board.appendChild(selectionWrapper);
-		selectionWrapper.style.zIndex = this.lineWrapped.zIndex;
+		selectionWrapper.style.zIndex = this.shapeWrapped.zIndex;
     selectionWrapper.style.userSelect = 'none';
 
     this._createPointsSelectors();
@@ -41,25 +41,25 @@ export class LineWrapper{
     attr: {
         cx: centerX, cy: centerY, r: 4,
         fill: '#4262ff', stroke: "none",
-        'stroke-width': 0, class: `selector-corner-${this.lineWrapped.cssId}`
+        'stroke-width': 0, class: `selector-corner-${this.shapeWrapped.cssId}`
         }
     });
     this.board.appendChild(cornerSelector);
-    cornerSelector.style.zIndex = this.lineWrapped.zIndex;
+    cornerSelector.style.zIndex = this.shapeWrapped.zIndex;
     cornerSelector.style.userSelect = 'none';
 
     return cornerSelector;
   }
 
   _setWrapper(wrapper){
-    const lineLength = Math.sqrt(Math.pow((this.lineWrapped.endingPoint.x - this.lineWrapped.startingPoint.x), 2) +
-		Math.pow((this.lineWrapped.endingPoint.y - this.lineWrapped.startingPoint.y), 2));
+    const lineLength = Math.sqrt(Math.pow((this.shapeWrapped.endingPoint.x - this.shapeWrapped.startingPoint.x), 2) +
+		Math.pow((this.shapeWrapped.endingPoint.y - this.shapeWrapped.startingPoint.y), 2));
 
-		const centerX = (this.lineWrapped.startingPoint.x + this.lineWrapped.endingPoint.x) /2;
-		const centerY = (this.lineWrapped.startingPoint.y + this.lineWrapped.endingPoint.y) /2;
+		const centerX = (this.shapeWrapped.startingPoint.x + this.shapeWrapped.endingPoint.x) /2;
+		const centerY = (this.shapeWrapped.startingPoint.y + this.shapeWrapped.endingPoint.y) /2;
 
-		const width = this.lineWrapped.endingPoint.x - this.lineWrapped.startingPoint.x;
-		const height = this.lineWrapped.endingPoint.y - this.lineWrapped.startingPoint.y;
+		const width = this.shapeWrapped.endingPoint.x - this.shapeWrapped.startingPoint.x;
+		const height = this.shapeWrapped.endingPoint.y - this.shapeWrapped.startingPoint.y;
 		const rotationAngle = Math.atan(height/ width) *(180/ Math.PI);
 
 		const selectorRadiusW = (lineLength/2) + 10;
@@ -70,7 +70,7 @@ export class LineWrapper{
         cx: centerX, cy: centerY, rx: selectorRadiusW, ry: selectorRadiusH,
         fill: 'transparent',
         transform: `rotate(${rotationAngle} ${centerX} ${centerY})`,
-        id: `line-selector-${this.lineWrapped.cssId}`
+        id: `line-selector-${this.shapeWrapped.cssId}`
       }
     });
   }
@@ -81,22 +81,21 @@ export class LineWrapper{
   }
  
   _createPointsSelectors(){
-    this.pointsSelectors.startingPoint = this._createPointSelector(this.lineWrapped.startingPoint.x, this.lineWrapped.startingPoint.y)
-    this.pointsSelectors.endingPoint = this._createPointSelector(this.lineWrapped.endingPoint.x, this.lineWrapped.endingPoint.y)
+    this.pointsSelectors.startingPoint = this._createPointSelector(this.shapeWrapped.startingPoint.x, this.shapeWrapped.startingPoint.y)
+    this.pointsSelectors.endingPoint = this._createPointSelector(this.shapeWrapped.endingPoint.x, this.shapeWrapped.endingPoint.y)
   }
 
   updatePointsSelectors(){
-    this.pointsSelectors.startingPoint.setAttribute("cx", this.lineWrapped.startingPoint.x);
-    this.pointsSelectors.startingPoint.setAttribute("cy", this.lineWrapped.startingPoint.y);
-    this.pointsSelectors.endingPoint.setAttribute("cx", this.lineWrapped.endingPoint.x);
-    this.pointsSelectors.endingPoint.setAttribute("cy", this.lineWrapped.endingPoint.y);
+    this.pointsSelectors.startingPoint.setAttribute("cx", this.shapeWrapped.startingPoint.x);
+    this.pointsSelectors.startingPoint.setAttribute("cy", this.shapeWrapped.startingPoint.y);
+    this.pointsSelectors.endingPoint.setAttribute("cx", this.shapeWrapped.endingPoint.x);
+    this.pointsSelectors.endingPoint.setAttribute("cy", this.shapeWrapped.endingPoint.y);
   }
   removeWrapper(){
     this.wrapper.remove();
   }
 
   _addEventHandlers(){
-    this.wrapper.onclick = () => this._clickAcion();
     this.wrapper.onmousedown = () => this._mouseDownAction();
     this.wrapper.onmouseup = () => this._mouseUpAction();
 
@@ -116,9 +115,12 @@ export class LineWrapper{
     if(this.clicked){
       this.disablePrevSelector();
       this.enable();
+      store.commit('setSelecting', true);
     }
     else{
       this.disable();
+      this.mouseDown = false;
+      store.commit('setSelecting', false);
     }
   }
   //Resizing shape
@@ -134,7 +136,7 @@ export class LineWrapper{
       else {
         const updatedX = window.mouseX 
         const updatedY = window.mouseY - 110;
-        this.lineWrapped.updateStartingPos(updatedX, updatedY);
+        this.shapeWrapped.updateStartingPos(updatedX, updatedY);
         this.update();
       }
     }, 10); 
@@ -152,7 +154,7 @@ export class LineWrapper{
       else {
         const updatedX = window.mouseX 
         const updatedY = window.mouseY - 110;
-        this.lineWrapped.updateEndingPos(updatedX, updatedY);
+        this.shapeWrapped.updateEndingPos(updatedX, updatedY);
         this.update();
       }
     }, 10); 
@@ -174,10 +176,12 @@ export class LineWrapper{
   //moving Shape
   _mouseDownAction(){
     this.mouseDown = true;
+    this.disable();
     this._trackMovement();
   }
 
   _mouseUpAction(){
+    this._clickAcion();
     this.mouseDown = false;
   }
   
@@ -186,20 +190,22 @@ export class LineWrapper{
     let prevY = window.mouseY - 110;
 
     const tracker = setInterval(() => {
-      if(!this.mouseDown || !store.getters.boardMouseDown) clearInterval(tracker);
+      if(!this.mouseDown || !store.getters.boardMouseDown) {
+        clearInterval(tracker);
+      }
       else {
         const updateX = window.mouseX;
         const updatedY = window.mouseY - 110;
         const xShift = updateX - prevX;
         const yShift = updatedY - prevY;
-        const newStartingPointX = this.lineWrapped.startingPoint.x + xShift;
-        const newStartingPointY = this.lineWrapped.startingPoint.y + yShift;
-        const newEndingPointX = this.lineWrapped.endingPoint.x + xShift;
-        const newEndingPointY = this.lineWrapped.endingPoint.y + yShift;
+        const newStartingPointX = this.shapeWrapped.startingPoint.x + xShift;
+        const newStartingPointY = this.shapeWrapped.startingPoint.y + yShift;
+        const newEndingPointX = this.shapeWrapped.endingPoint.x + xShift;
+        const newEndingPointY = this.shapeWrapped.endingPoint.y + yShift;
         prevX = window.mouseX;
         prevY = window.mouseY - 110;
-        this.lineWrapped.updateStartingPos(newStartingPointX, newStartingPointY);
-        this.lineWrapped.updateEndingPos(newEndingPointX, newEndingPointY);
+        this.shapeWrapped.updateStartingPos(newStartingPointX, newStartingPointY);
+        this.shapeWrapped.updateEndingPos(newEndingPointX, newEndingPointY);
         this.update();
       }
     }, 1); 

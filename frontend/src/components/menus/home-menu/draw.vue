@@ -19,9 +19,6 @@
     <div class="sub-elem down-controls triangle" @click="enableDrawing(shapeTypes.triangle)">
       <img src="../../../assets/drawing/triangle.svg" width="20">
     </div>
-    <div class="sub-elem down-controls rhombus" @click="enableDrawing(shapeTypes.rhombus)">
-      <img src="../../../assets/drawing/rhombus.png" width="20">
-    </div>
     <div class="sub-elem down-controls line" @click="enableDrawing(shapeTypes.line)">
       <img src="../../../assets/drawing/line.png" width="20">
     </div>
@@ -117,7 +114,7 @@ export default {
   grid-column: 3/4;
 }
 .line{
-  grid-column: 4/5;
+  grid-column: 3/4;
 }
 
 .label{
