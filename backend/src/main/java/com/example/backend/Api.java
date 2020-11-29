@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public class Api {
-    Factory factory = new Factory();
+    ShapeBuilder shapeBuilder = new ShapeBuilder();
     Controller controller = new Controller();
 
     // URL mappings for methods will be added later
@@ -14,58 +14,40 @@ public class Api {
     // Creation and undo/redo
     public Shape performUndo(){
         Shape shape = controller.performUndo();
-        Integer ID = shape.getID();
-        factory.updateShape(ID, shape);
+        Integer ID = shape.getId();
+        shapeBuilder.updateShape(ID, shape);
         return shape;
     }
     public Shape performRedo(){
         Shape shape = controller.performRedo();
-        Integer ID = shape.getID();
-        factory.updateShape(ID, shape);
+        Integer ID = shape.getId();
+        shapeBuilder.updateShape(ID, shape);
         return shape;
     }
     public Shape getShape(Integer ID){
-        return factory.getShape(ID);
+        return shapeBuilder.getShape(ID);
     }
-    public void createShape(String type, Integer ID, Double length1, Double length2, Point startingPoint, Point[]points){
-        factory.createShape(type, ID, length1, length2, startingPoint, points);
-        controller.addUndo(getShape(ID)); // after adding shape, we add clone of shape to undo stack
+
+    public void createLine(int id, Point startingPoint, Point endingPoint){
+        shapeBuilder.buildLine(id, startingPoint, endingPoint);
+        controller.addUndo(getShape(id)); // after adding shape, we add clone of shape to undo stack
     }
     
     // Changing features of shapes
-    public void changeSize(Integer ID, Double length1, Double length2, Point[]points){
-        Shape shape = getShape(ID);
-        shape.changeSize(length1, length2, points);
-        refreshShape(ID, shape);
-    }
     public void changeAngle(Integer ID, Double angle){
         Shape shape = getShape(ID);
         shape.setAngle(angle);
         refreshShape(ID, shape);
     }
-    public void changePosition(Integer ID, Point startingPosition, Point[]points){
-        Shape shape = getShape(ID);
-        shape.changePosition(startingPosition, points);
-        refreshShape(ID, shape);
-    }
-    public void changeFillInColor(Integer ID, RGB color){
-        Shape shape = getShape(ID);
-        shape.setFillInColor(color);
-        refreshShape(ID, shape);
-    }
-    public void changeOutlineColor(Integer ID, RGB color){
-        Shape shape = getShape(ID);
-        shape.setOutlineColor(color);
-        refreshShape(ID, shape);   
+    public void changeFillSpecs(int id,String fillColor ,double opacity){
+        Shape shape = getShape(id);
+        shape.setFillColor(fillColor);
+        shape.setFillOpacity(opacity);
+        refreshShape(id, shape);
     }
     public void changeThickness(Integer ID, Integer thickness){
         Shape shape = getShape(ID);
-        shape.setOutlineThickness(thickness);
-        refreshShape(ID, shape);
-    }
-    public void changeText(Integer ID, String text){
-        Shape shape = getShape(ID);
-        shape.setText(text);
+        shape.setThickness(thickness);
         refreshShape(ID, shape);
     }
     public void changeZ(Integer ID, Integer z){
@@ -73,17 +55,38 @@ public class Api {
         shape.setZ(z);
         refreshShape(ID, shape);
     }
-    public void changeContainerAttributes(Integer ID, Point upperLeftCorner, Double height, Double width){
-        Shape shape = getShape(ID);
-        shape.setContainerUpperLeftCorner(upperLeftCorner);
-        shape.setContainerHeight(height);
-        shape.setContainerWidth(width);
-        refreshShape(ID, shape);
+    // Change line Features
+    public void changeLineStartingPoint(int id, Point startingPoint){
+        Line line = (Line)getShape(id);
+        line.setStartingPoint(startingPoint);
+        refreshShape(id, line);
     }
-
+    public void changeLineEndingPoint(int id, Point endingPoint){
+        Line line = (Line)getShape(id);
+        line.setEndingPoint(endingPoint);
+        refreshShape(id, line);
+    }
+    // Change multiPointShape fearues
+    public void changeUpperLeftCorner(int id, Point upperLeftCorner){
+        MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
+        multiPointShape.setUpperLeftCorner(upperLeftCorner);
+        refreshShape(id, multiPointShape);
+    }
+    public void changeSize(int id, double width, double height){
+        MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
+        multiPointShape.setWidth(width);
+        multiPointShape.setHeight(height);
+        refreshShape(id, multiPointShape);
+    }
+    public void changeOutlineSpecs(int id, String  outlineColor, double opacity){
+        MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
+        multiPointShape.setOutlineColor(outlineColor);
+        multiPointShape.setOutlineOpacity(opacity);
+        refreshShape(id, multiPointShape);
+    }
     // Doesn't need URL Mapping
     public void refreshShape(Integer ID, Shape shape){
-        factory.updateShape(ID, shape); // after editing shape, we update the shape in the map   
+        shapeBuilder.updateShape(ID, shape); // after editing shape, we update the shape in the map
         controller.addUndo(shape); // after editing shape, we add clone of shape to undo stack
     }
 

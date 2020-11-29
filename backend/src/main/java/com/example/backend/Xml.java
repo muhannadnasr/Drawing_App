@@ -3,7 +3,7 @@ package com.example.backend;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -75,7 +75,7 @@ public class Xml {
             Element element= document.createElement("Shapes");
             document.appendChild(element);
 
-            //for(int i=0; i<5; i++){
+            for(int i=0; i<5; i++){
                 // features of the developers
                 Element developer = document.createElement("Shape");
                 element.appendChild(developer);
@@ -96,9 +96,14 @@ public class Xml {
                 age.appendChild(document.createTextNode("56"));
                 developer.appendChild(age);
 
-           // }
+           }
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            // transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            // transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
             DOMSource source = new DOMSource(document);
 
             StreamResult streamResult = new StreamResult(new File("E:\\XML_TEST\\data.xml"));
