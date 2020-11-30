@@ -3,11 +3,8 @@ package com.example.backend;
 public abstract class Shape implements Cloneable{
     private int id;
     private String type;
-    private double angle = 0;
     private String fillColor = "default_FillColor";
-    private double fillOpacity = 0.0;
     private double thickness = 0.0;
-    private int z = 0;
 
     public Shape(int id, String type){
         this.id = id;
@@ -30,26 +27,11 @@ public abstract class Shape implements Cloneable{
         return type;
     }
 
-    public void setAngle(double angle){
-        this.angle = angle;
-    }
-    public double getAngle(){
-        return angle;
-    }
-
     public void setFillColor(String fillColor){
         this.fillColor = fillColor;
     }
     public String getFillColor(){
         return fillColor;
-    }
-
-    public double getFillOpacity() {
-        return fillOpacity;
-    }
-
-    public void setFillOpacity(double fillOpacity) {
-        this.fillOpacity = fillOpacity;
     }
 
     public double getThickness() {
@@ -58,12 +40,5 @@ public abstract class Shape implements Cloneable{
 
     public void setThickness(double thickness) {
         this.thickness = thickness;
-    }
-
-    public void setZ(int z){
-        this.z = z;
-    }
-    public int getZ(){
-        return z;
     }
 }

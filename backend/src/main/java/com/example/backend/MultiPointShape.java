@@ -4,8 +4,8 @@ public class MultiPointShape extends Shape{
     private Point upperLeftCorner;
     private double width;
     private double height;
+    private double fillOpacity = 0.0;
     private String outlineColor = "default_outlineColor";
-    private double outlineOpacity;
 
     public MultiPointShape(int id, String type, Point upperLeftCorner,double width, double height) {
         super(id, type);
@@ -46,11 +46,11 @@ public class MultiPointShape extends Shape{
         this.outlineColor = outlineColor;
     }
 
-    public double getOutlineOpacity() {
-        return outlineOpacity;
+    public double getFillOpacity() {
+        return fillOpacity;
     }
 
-    public void setOutlineOpacity(double outlineOpacity) {
-        this.outlineOpacity = outlineOpacity;
+    public void setFillOpacity(double fillOpacity) {
+        this.fillOpacity = fillOpacity;
     }
 }

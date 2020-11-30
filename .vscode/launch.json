@@ -2,16 +2,17 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - test",
+            "name": "CodeLens (Launch) - BackendApplication",
             "request": "launch",
-            "mainClass": "com.example.backend.test",
+            "mainClass": "com.example.backend.BackendApplication",
             "projectName": "backend"
         },
         {
             "type": "java",
             "name": "CodeLens (Launch) - BackendApplication",
             "request": "launch",
-            "mainClass": "com.example.backend.BackendApplication"
+            "mainClass": "com.example.backend.BackendApplication",
+            "projectName": "backend"
         },
         {
             "type": "java",

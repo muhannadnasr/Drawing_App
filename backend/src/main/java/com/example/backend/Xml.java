@@ -12,7 +12,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 //import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -67,7 +66,6 @@ public class Xml {
     //     }
     //     return answer;
     // }
-    @GetMapping("/")
     public String javaToXml(HashMap<Integer, Shape> shapes, String location) throws TransformerException {
         
         // INSERTING OBJECTS IN MAP FOR TESTING
@@ -91,7 +89,7 @@ public class Xml {
             Element element= document.createElement("Shapes");
             document.appendChild(element);
 
-            for(HashMap.Entry mapElement : shapes.entrySet()){
+            for(HashMap.Entry<Integer, Shape> mapElement : shapes.entrySet()){
                 Integer key = (Integer)mapElement.getKey();
 
                 boolean isLine = false;
@@ -124,15 +122,13 @@ public class Xml {
                     createShapeTags(document, shape, "Width", String.valueOf(hold.getWidth()));
                     createShapeTags(document, shape, "Height", String.valueOf(hold.getHeight()));
                     createShapeTags(document, shape, "OutlineColor", String.valueOf(hold.getOutlineColor()));
+                    createShapeTags(document, shape, "FillOpacity", String.valueOf(hold.getFillOpacity()));
                 }
             
             Shape object = (Shape)shapes.get(key);
             
-            createShapeTags(document, shape, "Angle", String.valueOf(object.getAngle()));
             createShapeTags(document, shape, "FillColor", String.valueOf(object.getFillColor()));
-            createShapeTags(document, shape, "FillOpacity", String.valueOf(object.getFillOpacity()));
             createShapeTags(document, shape, "Thickness", String.valueOf(object.getThickness()));
-            createShapeTags(document, shape, "Z", String.valueOf(object.getZ()));
 
            }
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -146,10 +142,7 @@ public class Xml {
             StreamResult streamResult = new StreamResult(new File(location)); // "E:\\XML_TEST\\data.xml"
 
             transformer.transform(source, streamResult);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-            return "failed";
-        } catch (TransformerConfigurationException e) {
+        } catch (ParserConfigurationException | TransformerConfigurationException e) {
             e.printStackTrace();
             return "failed";
         }

@@ -52,7 +52,6 @@ export class Line {
       this.updatePoints();
     }
     updateFillColor(rgbColor) {
-      if (rgbColor === 'transparent') return;
       this.fill = rgbColor;
       this.shape.setAttribute("stroke", rgbColor);
     }

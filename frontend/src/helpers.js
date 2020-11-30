@@ -14,3 +14,7 @@ export function getZIndex(){
   store.commit("setMaxZIndex", newZIndex +1)
   return newZIndex;
 }
+
+export function stringfyPoint(x, y){
+  return `${x},${y}`;
+}

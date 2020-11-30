@@ -38,15 +38,3 @@ export class Shape {
         this.shape.setAttribute("stroke-width", thickness);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

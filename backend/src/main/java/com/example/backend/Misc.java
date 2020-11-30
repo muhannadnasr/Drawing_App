@@ -24,7 +24,7 @@ class square {
     }
 }
 
-public class test {
+class test {
 
     public static String obj2json(Object a) {
         ObjectMapper mapper = new ObjectMapper();

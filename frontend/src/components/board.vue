@@ -17,6 +17,8 @@ import { Triangle } from '../shapes/triangle.js';
 import { ShapeWrapper } from "../shapes/shapeWrapper.js";
 import { LineWrapper } from "../shapes/lineWrapper.js";
 import { Line } from '../shapes/line.js';
+import { pushShape } from '../backEndComm/shapeComm.js';
+import { pushLine } from '../backEndComm/lineComm.js';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'board',
@@ -124,10 +126,12 @@ export default {
         if(!this.isLine()) {
           this.currentShape.shape.selector = new ShapeWrapper(this.currentShape.shape);
           this.setCurrentSelector(this.currentShape.shape.selector);
+          pushShape(this.currentShape.shape);
         }
         else{
           this.currentShape.shape.selector = new LineWrapper(this.currentShape.shape);
           this.setCurrentSelector(this.currentShape.shape.selector);
+          pushLine(this.currentShape.shape);
         }
         this.disableDrawingMode();
         this.setSelecitngStatus(true);
@@ -153,7 +157,9 @@ export default {
         const endingY = this.currentShape.startingPos.y - height;
         this.currentShape.shape.create(this.currentShape.startingPos.x, this.currentShape.startingPos.y, endingX, endingY);
       }
-      else this.currentShape.shape.create(width, height);
+      else {
+        this.currentShape.shape.create(width, height);
+      }
     },
     setStartingPos(){
       this.currentShape.startingPos.x = this.mousePointer.x;

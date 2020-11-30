@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-
+import { updateLinePos } from '../backEndComm/lineComm.js';
 import store from "../store";
 
 export class LineWrapper{
@@ -68,7 +68,7 @@ export class LineWrapper{
     gsap.set(wrapper, {
       attr: {
         cx: centerX, cy: centerY, rx: selectorRadiusW, ry: selectorRadiusH,
-        fill: 'transparent', stroke: 'blue',
+        fill: 'transparent',
         transform: `rotate(${rotationAngle} ${centerX} ${centerY})`,
         id: `line-selector-${this.shapeWrapped.cssId}`
       }
@@ -161,6 +161,7 @@ export class LineWrapper{
   }
 
   _pointSelectorMouseUpAction(){
+    updateLinePos(this.shapeWrapped);
     this.resizing = false;
   }
   
@@ -182,6 +183,7 @@ export class LineWrapper{
 
   _mouseUpAction(){
     this._clickAcion();
+    updateLinePos(this.shapeWrapped);
     this.mouseDown = false;
   }
   

@@ -5,17 +5,19 @@ import java.util.HashMap;
 public class ShapeBuilder {
     private HashMap<Integer, Shape> shapes = new HashMap<Integer, Shape>();
 
-    public Line buildLine(int id, Point startingPoint, Point endingPoint){
-        return new Line(id, "line", startingPoint, endingPoint);
+    public void buildLine(int id, Point startingPoint, Point endingPoint){
+        Shape newLine =  new Line(id, "line", startingPoint, endingPoint);
+        updateShape(id, newLine);
     }
-    public MultiPointShape buildShape(int id, String type,Point upperLeftCorner, double width, double height){
-        return new MultiPointShape(id, type,upperLeftCorner, width, height);
+    public void buildShape(int id, String type,Point upperLeftCorner, double width, double height){
+        Shape newShape =  new MultiPointShape(id, type,upperLeftCorner, width, height);
+        updateShape(id, newShape);
     }
-    public Shape getShape(Integer ID){
-        return shapes.get(ID);
+    public Shape getShape(int id){
+        return shapes.get(id);
     }
-    public void updateShape(Integer ID, Shape shape){
-        shapes.put(ID, shape);
+    public void updateShape(int id, Shape shape){
+        shapes.put(id, shape);
     }
     public HashMap<Integer, Shape> getHashMap(){
         return shapes;

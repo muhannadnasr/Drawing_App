@@ -49,7 +49,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { rgb } from '../../../helpers.js'
+import { rgb } from '../../../helpers.js';
+import { updateFillColor, updateThickness } from '../../../backEndComm/comm.js';
+import { updateFillOpacity, updateOutlineColor } from '../../../backEndComm/shapeComm.js';
 export default {
   name: 'shapeFormat',
   props: {
@@ -162,7 +164,10 @@ export default {
 
       const range = document.getElementById("opacity-adj");
       const opacityTracker = setInterval( () => {
-        if(!this.isSelecting) clearInterval(opacityTracker);
+        if(!this.isSelecting) {
+          clearInterval(opacityTracker);
+          updateFillOpacity(this.currentSelector.shapeWrapped);
+        }
         this.opacityText = `${range.value}%`;
         this.opacity = range.value / 100;
         if (this.currActiveMenu.id == 0) {
@@ -172,8 +177,11 @@ export default {
     },
     setNoFill(){
       this.currActiveMenu.selectedColor = "transparent";
+      if(this.currentSelector.shapeWrapped.shapeType === 'line') return;
       if (this.currActiveMenu.id == 0) this.setShapeFillColor();
-      this.hideColorMenu();
+      else if(this.currActiveMenu.id == 1) {
+        this.setShapeOutlineColor();
+      }
     },
     setThickness(){
       if(!this.isSelecting) return;
@@ -189,6 +197,7 @@ export default {
       const thicknessTracker = setInterval( () => {
         if(!this.isSelecting) {
           clearInterval(thicknessTracker);
+          updateThickness(this.currentSelector.shapeWrapped);
         }
         this.thickness = range.value; 
         this.thicknessText = `${range.value}px`;
@@ -202,11 +211,13 @@ export default {
     setShapeFillColor(){
       if(this.isSelecting){
         this.currentSelector.shapeWrapped.updateFillColor(this.colorFillMenu.selectedColor);
+        updateFillColor(this.currentSelector.shapeWrapped);
       }
     },
     setShapeOutlineColor(){
       if(this.isSelecting){
         this.currentSelector.shapeWrapped.updateOutlineColor(this.outlineMenu.selectedColor);
+        updateOutlineColor(this.currentSelector.shapeWrapped);
       }
     },
     setShapeFillOpacity(){
