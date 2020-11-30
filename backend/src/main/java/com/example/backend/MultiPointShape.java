@@ -4,7 +4,7 @@ public class MultiPointShape extends Shape{
     private Point upperLeftCorner;
     private double width;
     private double height;
-    private String outlineColor;
+    private String outlineColor = "default_outlineColor";
     private double outlineOpacity;
 
     public MultiPointShape(int id, String type, Point upperLeftCorner,double width, double height) {
