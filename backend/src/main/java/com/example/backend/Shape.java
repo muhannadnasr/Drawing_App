@@ -4,10 +4,10 @@ public abstract class Shape implements Cloneable{
     private int id;
     private String type;
     private double angle = 0;
-    private String fillColor;
-    private double fillOpacity;
-    private double thickness;
-    private int z;
+    private String fillColor = "default_FillColor";
+    private double fillOpacity = 0.0;
+    private double thickness = 0.0;
+    private int z = 0;
 
     public Shape(int id, String type){
         this.id = id;

@@ -17,4 +17,7 @@ public class ShapeBuilder {
     public void updateShape(Integer ID, Shape shape){
         shapes.put(ID, shape);
     }
+    public HashMap<Integer, Shape> getHashMap(){
+        return shapes;
+    }
 }
