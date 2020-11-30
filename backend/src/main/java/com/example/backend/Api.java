@@ -1,5 +1,7 @@
 package com.example.backend;
 
+import java.util.HashMap;
+
 import javax.xml.transform.TransformerException;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,19 +17,34 @@ public class Api {
     Xml xml = new Xml();
 
     // Creation and undo/redo
-    public Shape performUndo() {
-        Shape shape = controller.performUndo();
-        Integer ID = shape.getId();
-        shapeBuilder.updateShape(ID, shape);
-        return shape;
+    public HashMap<Integer, Shape> performUndo() throws CloneNotSupportedException {
+        HashMap<Integer, Shape> current = new HashMap<Integer, Shape>();
+        HashMap<Integer, Shape> undoMap = performUndo();
+        if(undoMap != null){
+            for(HashMap.Entry<Integer, Shape> mapElement : undoMap.entrySet()){
+                Integer ID = (Integer)mapElement.getKey();
+                Shape shapeClone = (undoMap.get(ID)).clone();
+                current.put(ID, shapeClone);
+            }
+        }
+        shapeBuilder.setHashMap(current);
+        return undoMap;
     }
 
-    public Shape performRedo() {
-        Shape shape = controller.performRedo();
-        Integer ID = shape.getId();
-        shapeBuilder.updateShape(ID, shape);
-        return shape;
+    public HashMap<Integer, Shape> performRedo() throws CloneNotSupportedException {
+        HashMap<Integer, Shape> current = new HashMap<Integer, Shape>();
+        HashMap<Integer, Shape> redoMap = performRedo();
+        if(redoMap != null){
+            for(HashMap.Entry<Integer, Shape> mapElement : redoMap.entrySet()){
+                Integer ID = (Integer)mapElement.getKey();
+                Shape shapeClone = (redoMap.get(ID)).clone();
+                current.put(ID, shapeClone);
+            }
+        }
+        shapeBuilder.setHashMap(current);
+        return redoMap;
     }
+
 
     public Shape getShape(int id) {
         return shapeBuilder.getShape(id);
@@ -36,7 +53,7 @@ public class Api {
     @PostMapping("/createLine")
     public void createLine( @RequestParam int id, 
                             @RequestParam String startingPoint, 
-                            @RequestParam String endingPoint) {
+                            @RequestParam String endingPoint) throws CloneNotSupportedException {
 
         //setting up the point object                                   
         String [] startingCoordinates = startingPoint.split(",");
@@ -49,13 +66,13 @@ public class Api {
                   
         shapeBuilder.buildLine(id,  new Point(startingX, startingY), 
                                     new Point(endingX, endingY));
-        controller.addUndo(getShape(id)); // after adding shape, we add clone of shape to undo stack
+        controller.addUndo(shapeBuilder.getHashMap()); // after adding shape, we add clone of map to undo stack
     }
 
     @PostMapping("/createShape")
     public void createMultiPointShape(  @RequestParam int id, @RequestParam String type, 
                                         @RequestParam String upperLeftCorner, 
-                                        @RequestParam double width, @RequestParam double height) {
+                                        @RequestParam double width, @RequestParam double height) throws CloneNotSupportedException {
         
         //setting up the point object                                   
         String [] coordinates = upperLeftCorner.split(",");
@@ -63,25 +80,28 @@ public class Api {
         double y = Double.parseDouble(coordinates[1]);
 
         shapeBuilder.buildShape(id, type, new Point(x, y), width, height);
-        controller.addUndo(getShape(id));
+        controller.addUndo(shapeBuilder.getHashMap());
     }
     // change shape features
     @PostMapping("/updateFillColor")
-    public void changeFillColor(@RequestParam int id, @RequestParam String fillColor) {
+    public void changeFillColor(@RequestParam int id, @RequestParam String fillColor)
+            throws CloneNotSupportedException {
         Shape shape = getShape(id);
         shape.setFillColor(fillColor);
         refreshShape(id, shape);
     }
 
     @PostMapping("/updateThickness")
-    public void changeThickness(@RequestParam int id, @RequestParam Integer thickness) {
+    public void changeThickness(@RequestParam int id, @RequestParam Integer thickness)
+            throws CloneNotSupportedException {
         Shape shape = getShape(id);
         shape.setThickness(thickness);
         refreshShape(id, shape);
     }
     // Change line Features
     @PostMapping("/updateLinePos")
-    public void changeLinePos(@RequestParam int id, @RequestParam String startingPoint, @RequestParam String endingPoint) {
+    public void changeLinePos(@RequestParam int id, @RequestParam String startingPoint, @RequestParam String endingPoint)
+            throws CloneNotSupportedException {
         //setting up the point object                                   
         String [] startingCoordinates = startingPoint.split(",");
         double startingX = Double.parseDouble(startingCoordinates[0]);
@@ -100,7 +120,7 @@ public class Api {
     // Change multiPointShape fearues
     @PostMapping("updateShapePosAndSize")
     public void changeShapePosAndSize(  @RequestParam int id, @RequestParam String upperLeftCorner,
-                                        @RequestParam double width, @RequestParam double height) {
+                                        @RequestParam double width, @RequestParam double height) throws CloneNotSupportedException {
         
         //setting up the point object                                   
         String [] coordinates = upperLeftCorner.split(",");
@@ -115,14 +135,16 @@ public class Api {
     }
 
     @PostMapping("updateOutlineColor")
-    public void changeOutlineColor(@RequestParam int id, @RequestParam String outlineColor) {
+    public void changeOutlineColor(@RequestParam int id, @RequestParam String outlineColor)
+            throws CloneNotSupportedException {
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
         multiPointShape.setOutlineColor(outlineColor);
         refreshShape(id, multiPointShape);
     }
 
     @PostMapping("updateFillOpacity")
-    public void changeFillOpacity(@RequestParam int id, @RequestParam double opacity) {
+    public void changeFillOpacity(@RequestParam int id, @RequestParam double opacity)
+            throws CloneNotSupportedException {
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
         multiPointShape.setFillOpacity(opacity);
         refreshShape(id, multiPointShape);
@@ -137,9 +159,9 @@ public class Api {
     }
 
     // Doesn't need URL Mapping
-    public void refreshShape(Integer ID, Shape shape){
+    public void refreshShape(Integer ID, Shape shape) throws CloneNotSupportedException {
         shapeBuilder.updateShape(ID, shape); // after editing shape, we update the shape in the map
-        controller.addUndo(shape); // after editing shape, we add clone of shape to undo stack
+        controller.addUndo(shapeBuilder.getHashMap()); // after editing shape, we add clone of shape to undo stack
     }
 
 }
