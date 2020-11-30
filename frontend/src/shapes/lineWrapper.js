@@ -63,12 +63,12 @@ export class LineWrapper{
 		const rotationAngle = Math.atan(height/ width) *(180/ Math.PI);
 
 		const selectorRadiusW = (lineLength/2) + 10;
-    const selectorRadiusH = 7;
+    const selectorRadiusH = 7 + (this.shapeWrapped.thickness/2);
 
     gsap.set(wrapper, {
       attr: {
         cx: centerX, cy: centerY, rx: selectorRadiusW, ry: selectorRadiusH,
-        fill: 'transparent',
+        fill: 'transparent', stroke: 'blue',
         transform: `rotate(${rotationAngle} ${centerX} ${centerY})`,
         id: `line-selector-${this.shapeWrapped.cssId}`
       }

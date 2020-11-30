@@ -60,6 +60,7 @@ export class Line {
       if(thickness < 1) return;
       this.thickness = thickness;
       this.shape.setAttribute("stroke-width", thickness);
+      this.selector.update();
     }
     _loadPoints(){
       return `${this.startingPoint.x},${this.startingPoint.y} ${this.endingPoint.x},${this.endingPoint.y}`;
