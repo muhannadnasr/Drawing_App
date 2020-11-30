@@ -31,5 +31,18 @@ function updateOutlineColor(shape){
   .catch( (error) => console.log(error));
 }
 
+function updateShapePosAndSize(shape){
+  axios.post('http://localhost:8085/updateShapePosAndSize', null, 
+  {params :{
+    id: shape.shapeId,
+    upperLeftCorner: stringfyPoint(shape.upperLeftCorner.x, shape.upperLeftCorner.y),
+    width: shape.width,
+    height: shape.height,
+  }})
+  .then( () => console.log("pos updated"))
+  .catch( (error) => console.log(error));
+}
 
-export { pushShape, updateFillOpacity, updateOutlineColor }
+
+
+export { pushShape, updateFillOpacity, updateOutlineColor, updateShapePosAndSize}

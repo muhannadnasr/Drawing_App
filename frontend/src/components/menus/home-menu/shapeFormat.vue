@@ -8,7 +8,8 @@
 
     <div @click="activateMenu(outlineMenu)" class="sub-elem circle-outline" id="color-outline-btn">
       <svg width="60" height="60" version="1.1" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="30px" cy="30px" r="17px" :style="{stroke: selectedShapeOutlineColor()}" stroke-width="10px" fill="none"/>
+        <circle cx="30px" cy="30px" r="21px" stroke = "black"  stroke-width="2px" fill="none"/>
+        <circle cx="30px" cy="30px" r="16px" :style="{stroke: selectedShapeOutlineColor()}" stroke-width="10px" fill="none"/>
       </svg>
     </div>
 
@@ -181,6 +182,11 @@ export default {
       if (this.currActiveMenu.id == 0) this.setShapeFillColor();
       else if(this.currActiveMenu.id == 1) {
         this.setShapeOutlineColor();
+        this.thickness = 0;
+        this.thicknessText = '0px';
+        document.getElementById("shapeThickness-adj").value = 0;
+        this.setShapeThickness();
+        updateThickness(this.currentSelector.shapeWrapped);
       }
     },
     setThickness(){

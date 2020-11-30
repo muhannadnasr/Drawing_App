@@ -98,16 +98,17 @@ public class Api {
     }
 
     // Change multiPointShape fearues
-    @PostMapping("updateUpperLeftCorner")
-    public void changeUpperLeftCorner(int id, Point upperLeftCorner) {
-        MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
-        multiPointShape.setUpperLeftCorner(upperLeftCorner);
-        refreshShape(id, multiPointShape);
-    }
+    @PostMapping("updateShapePosAndSize")
+    public void changeShapePosAndSize(  @RequestParam int id, @RequestParam String upperLeftCorner,
+                                        @RequestParam double width, @RequestParam double height) {
+        
+        //setting up the point object                                   
+        String [] coordinates = upperLeftCorner.split(",");
+        double x = Double.parseDouble(coordinates[0]);
+        double y = Double.parseDouble(coordinates[1]);
 
-    @PostMapping("/updateSize")
-    public void changeSize(int id, double width, double height) {
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
+        multiPointShape.setUpperLeftCorner(new Point(x, y));
         multiPointShape.setWidth(width);
         multiPointShape.setHeight(height);
         refreshShape(id, multiPointShape);

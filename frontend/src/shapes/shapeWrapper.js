@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-
+import { updateShapePosAndSize} from '../backEndComm/shapeComm.js';
 import store from "../store";
 
 export class ShapeWrapper{
@@ -266,6 +266,7 @@ export class ShapeWrapper{
   }
   //resining actions
   _resizingMouseUpAction(){
+    updateShapePosAndSize(this.shapeWrapped);
     this.resizing = false;
   }
   
@@ -293,8 +294,15 @@ export class ShapeWrapper{
     let prevX = window.mouseX;
     let prevY = window.mouseY - 110;
     
+    const oldUpperLeftCornerX = this.shapeWrapped.upperLeftCorner.x;
+    const oldUpperLeftCornerY = this.shapeWrapped.upperLeftCorner.y;
+
     const tracker = setInterval(() => {
       if(!this.mouseDown || !store.getters.boardMouseDown) {
+        if( this.shapeWrapped.upperLeftCorner.x !== oldUpperLeftCornerX ||
+            this.shapeWrapped.upperLeftCorner.y !== oldUpperLeftCornerY) {
+              updateShapePosAndSize(this.shapeWrapped);
+            }
         clearInterval(tracker);
       }
       else {
