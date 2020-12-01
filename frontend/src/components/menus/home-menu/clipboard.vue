@@ -20,9 +20,8 @@ import { Triangle } from "../../../shapes/triangle.js";
 import { Line } from "../../../shapes/line.js";
 import { ShapeWrapper } from "../../../shapes/shapeWrapper.js";
 import { LineWrapper } from "../../../shapes/lineWrapper.js";
-import { pushShape, updateFillOpacity, updateOutlineColor } from "../../../backEndComm/shapeComm";
-import { pushLine } from "../../../backEndComm/lineComm";
-import { updateFillColor, updateThickness } from "../../../backEndComm/comm.js";
+import { pushShapeCopy } from "../../../backEndComm/shapeComm";
+import { pushLineCopy } from "../../../backEndComm/lineComm";
 import axios from 'axios';
 export default {
   name: 'clipboard',
@@ -43,8 +42,10 @@ export default {
   },
   computed: mapGetters(['currentSelector']),
   methods: {
-    ...mapActions(['setCurrentSelector', 'pushNewShape']),
+    ...mapActions(['setCurrentSelector', 'pushNewShape', 'setSelecitngStatus']),
     copyShape() {
+      if(this.currentSelector === null) return;
+      this.setSelecitngStatus(false);
       this.currentCopied = this.currentSelector.shapeWrapped;
     },
     pasteShape(){
@@ -88,12 +89,8 @@ export default {
 
         newShape.create(width, height);
         newShape.selector = new ShapeWrapper(newShape);
-        pushShape(newShape);
-    
         newShape.updateFillOpacity(fillOpacity);
-        updateFillOpacity(newShape);
         newShape.updateOutlineColor(outlineColor);
-        updateOutlineColor(newShape);
       }
       else {
         const startingPoint = {
@@ -107,21 +104,21 @@ export default {
         newShape = new Line(startingPoint.x, startingPoint.y, shapeType, shapeId);
         newShape.create(startingPoint.x, startingPoint.y, endingPoint.x, endingPoint.y);
         newShape.selector = new LineWrapper(newShape);
-        pushLine(newShape);
       }
 
       const fillColor = shapeInfo.fillColor;
       const thickness = shapeInfo.thickness;
       newShape.updateFillColor(fillColor);
-      updateFillColor(newShape);
       newShape.updateThickness(thickness);
-      updateThickness(newShape);
 
-      // newShape.selector.disablePrevSelector(); 
+      if(shapeType !== this.shapeTypes.line) pushShapeCopy(newShape);
+      else pushLineCopy(newShape);
+
       this.pushNewShape(newShape);
       newShape.selector.enable();
       newShape.selector.clicked = false;
       this.setCurrentSelector(newShape.selector);
+      this.setSelecitngStatus(true);
     }
   },
   mounted(){

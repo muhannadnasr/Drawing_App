@@ -82,8 +82,5 @@ export function reCreateShape(shapeInfo){ // shape info passed as json
   newShape.updateThickness(thickness);
   store.commit('pushShapeDrawn', newShape);
 
-  // newShape.selector.disablePrevSelector(); 
-  // newShape.selector.enable();
-  // newShape.selector.clicked = false;
-  // store.commit("setSelector", newShape.selector);
+  newShape.selector.disable();
 }

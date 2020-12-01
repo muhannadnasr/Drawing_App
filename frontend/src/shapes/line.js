@@ -57,7 +57,6 @@ export class Line {
       this.shape.setAttribute("stroke", rgbColor);
     }
     updateThickness(thickness) {
-      if(thickness < 1) return;
       this.thickness = thickness;
       this.shape.setAttribute("stroke-width", thickness);
       this.selector.update();

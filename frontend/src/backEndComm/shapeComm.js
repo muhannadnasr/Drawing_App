@@ -43,5 +43,21 @@ function updateShapePosAndSize(shape){
 }
 
 
+//for paste
+function pushShapeCopy(shape){
+  axios.post('http://localhost:8085/createShapeCopy', null, 
+  {params :{
+    id: shape.shapeId,
+    type: shape.shapeType,
+    upperLeftCorner: stringfyPoint(shape.upperLeftCorner.x, shape.upperLeftCorner.y),
+    width: shape.width,
+    height: shape.height,
+    fillColor: shape.fill,
+    fillOpacity: shape.fillOpacity,
+    thickness: shape.thickness,
+    outlineColor: shape.outline,
+  }})
+  .catch( (error) => console.log(error));
+}
 
-export { pushShape, updateFillOpacity, updateOutlineColor, updateShapePosAndSize}
+export { pushShape, updateFillOpacity, updateOutlineColor, updateShapePosAndSize, pushShapeCopy}

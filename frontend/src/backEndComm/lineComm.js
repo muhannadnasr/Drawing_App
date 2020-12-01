@@ -21,4 +21,17 @@ function updateLinePos(line){
   .catch( () => console.log("error"));
 }
 
-export {pushLine, updateLinePos }
+//for paste
+function pushLineCopy(line){
+  axios.post('http://localhost:8085/createLineCopy', null, 
+  {params :{
+    id: line.shapeId,
+    startingPoint: stringfyPoint(line.startingPoint.x, line.startingPoint.y),
+    endingPoint: stringfyPoint(line.endingPoint.x, line.endingPoint.y),
+    fillColor: line.fill,
+    thickness: line.thickness,
+  }})
+  .catch( (error) => console.log(error));
+}
+
+export {pushLine, updateLinePos, pushLineCopy }

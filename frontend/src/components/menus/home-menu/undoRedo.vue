@@ -29,18 +29,22 @@ export default {
     undo(){
       axios.get('http://localhost:8085/undo')
       .then( (response) => {
+        console.log(response.data);
         this.clearBoard();
         if(response.data !== "empty") this.reconstructBoard(response.data);
+        this.testHash();
       })
       .catch( (error) => console.log(error));
     },
     redo(){
       axios.get('http://localhost:8085/redo')
       .then( (response) => {
+        console.log(response.data);
         if(response.data !== "empty") {
           this.clearBoard();
           this.reconstructBoard(response.data);
         }
+        this.testHash();
       })
       .catch( (error) => console.log(error));
     },
@@ -56,6 +60,13 @@ export default {
       }
       this.clearShapesDrawn();
     },
+    testHash(){
+      axios.get('http://localhost:8085/test')
+      .then( (response) => {
+        console.log("hash map", response.data);
+      })
+      .catch( (error) => console.log(error));
+    }
   },
   mounted() {
 
