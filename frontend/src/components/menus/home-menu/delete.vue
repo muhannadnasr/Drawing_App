@@ -1,6 +1,6 @@
 <template>
   <div id="delete-sec">
-      <div class="sub-elem">
+      <div class="sub-elem" @click="deleteObject()">
         <img src="../../../assets/editingSec-Icons/delete.png" width="30">
       </div>
       <div class="label">Delete</div>
@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { del } from '../../../backEndComm/comm';
 export default {
   name: 'deleteBtn',
   data(){
@@ -16,8 +18,13 @@ export default {
 
     }
   },
+  computed: mapGetters(['currentSelector']),
   methods: {
-
+    deleteObject(){
+      if (this.currentSelector === null) return;
+      del(this.currentSelector.shapeWrapped.shapeId);
+      this.currentSelector.shapeWrapped.remove();
+    }
   },
 }
 </script>

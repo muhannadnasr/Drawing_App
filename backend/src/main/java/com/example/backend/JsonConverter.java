@@ -19,7 +19,7 @@ public class JsonConverter{
     }
 
     public String jsonStrFromHashMap(HashMap<Integer, Shape> map) {
-        String jsonStr = "{" + "\"Shapes\"" + ":" + " " + "{" + "\"Shape\"" + ":" + " " + "[" + "\n";
+        String jsonStr = "{" + "\"Shapes\"" + ":" + " " + "{" + "\"Shape\"" + ":" + " " + "[ " + "\n";
         for (Map.Entry<Integer, Shape> set : map.entrySet()) {
             jsonStr += shapeToJsonString(set.getValue());
             jsonStr += "," + "\n";

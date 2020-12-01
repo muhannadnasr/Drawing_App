@@ -30,7 +30,6 @@ public class Api {
         HashMap<Integer, Shape> undoMap = controller.performUndo();
 
         if (undoMap == null) return "empty";
-
         shapeBuilder.setHashMap(undoMap);
         return jsonConverter.jsonStrFromHashMap(undoMap);
     }
@@ -131,8 +130,9 @@ public class Api {
         return jsonConverter.shapeToJsonString(shape);
     }
     // deleting shape from hashmap
-    public void deleteShape(Integer ID) throws CloneNotSupportedException {
-        shapeBuilder.deleteShape(ID);
+    @PostMapping("/delete")
+    public void deleteShape(@RequestParam int id) throws CloneNotSupportedException {
+        shapeBuilder.deleteShape(id);
         controller.addUndo(shapeBuilder.getHashMap());
     }
 

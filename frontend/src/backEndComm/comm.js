@@ -17,4 +17,12 @@ function updateThickness(shape){
   }})
   .catch( (error) => console.log(error));
 }
-export { updateFillColor, updateThickness }
+
+function del(id){
+  axios.post('http://localhost:8085/delete', null, 
+  {params :{
+    id: id,
+  }})
+  .catch( (error) => console.log(error));
+}
+export { updateFillColor, updateThickness, del }

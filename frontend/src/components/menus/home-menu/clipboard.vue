@@ -6,7 +6,9 @@
     <div class="sub-elem copy" @click="copyShape()">
       <img src="../../../assets/editingSec-Icons/copy.png" width="23">
     </div>
-    <div class="sub-elem cut"><img src="../../../assets/editingSec-Icons/cut.png" width="23"></div>
+    <div class="sub-elem cut" @click="cutShape()">
+      <img src="../../../assets/editingSec-Icons/cut.png" width="23">
+    </div>
     <div class="label">Clipboard</div>
     <div class="seperator"></div>
   </div>
@@ -23,11 +25,13 @@ import { LineWrapper } from "../../../shapes/lineWrapper.js";
 import { pushShapeCopy } from "../../../backEndComm/shapeComm";
 import { pushLineCopy } from "../../../backEndComm/lineComm";
 import axios from 'axios';
+import { del } from '../../../backEndComm/comm';
 export default {
   name: 'clipboard',
   data() {
     return{
       currentCopied: null,
+      cuttedInfo: null,
 
       shapeTypes: {
         square: 'square',
@@ -48,17 +52,34 @@ export default {
       this.setSelecitngStatus(false);
       this.currentCopied = this.currentSelector.shapeWrapped;
     },
+    cutShape(){
+      if(this.currentSelector === null) return;
+      this.setSelecitngStatus(false);
+      this.currentCopied = this.currentSelector.shapeWrapped;
+
+      axios.get('http://localhost:8085/getShapeData', {
+        params :{ id: this.currentCopied.shapeId,}
+      })
+      .then( response => this.cuttedInfo = response.data)
+      .catch( error => console.log(error));
+      
+      del(this.currentSelector.shapeWrapped.shapeId);
+      this.currentSelector.shapeWrapped.remove();
+    },
     pasteShape(){
       if (this.currentCopied === null) return;
-      this.currentSelector.disable();
-      this.currentSelector.clicked = false;
+      if(this.currentSelector !== null){
+        this.currentSelector.disable();
+        this.currentSelector.clicked = false;
+      }
       axios.get('http://localhost:8085/getShapeData', {
         params :{
           id: this.currentCopied.shapeId,
         }
       })
       .then( (response) => {
-        this.performPasting(response.data);
+        if (response.data === null) this.performPasting(this.cuttedInfo);
+        else this.performPasting(response.data);
         this.currentCopied = this.currentSelector.shapeWrapped;
       })
       .catch( (error) => console.log(error));
@@ -118,6 +139,7 @@ export default {
       newShape.selector.enable();
       newShape.selector.clicked = false;
       this.setCurrentSelector(newShape.selector);
+      console.log(this.currentSelector);
       this.setSelecitngStatus(true);
     }
   },
