@@ -291,6 +291,7 @@ export class ShapeWrapper{
   }
   
   _trackMovement(){
+    if(store.getters.isDrawing) return;
     let prevX = window.mouseX;
     let prevY = window.mouseY - 110;
     
