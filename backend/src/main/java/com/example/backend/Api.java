@@ -126,6 +126,11 @@ public class Api {
         Shape shape = getShape(id);
         return jsonConverter.shapeToJsonString(shape);
     }
+    // deleting shape from hashmap
+    public void deleteShape(Integer ID) throws CloneNotSupportedException {
+        shapeBuilder.deleteShape(ID);
+        controller.addUndo(shapeBuilder.getHashMap());
+    }
 
     // Doesn't need URL Mapping
     private void refreshShape(Integer ID, Shape shape) throws CloneNotSupportedException {
