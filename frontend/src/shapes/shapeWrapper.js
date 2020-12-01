@@ -244,6 +244,7 @@ export class ShapeWrapper{
       if(!this.resizing || !store.getters.boardMouseDown) {
         clearInterval(tracker);
         this.enable();
+        updateShapePosAndSize(this.shapeWrapped);
       }
       else {
         const updatedX = window.mouseX 
@@ -266,7 +267,6 @@ export class ShapeWrapper{
   }
   //resining actions
   _resizingMouseUpAction(){
-    updateShapePosAndSize(this.shapeWrapped);
     this.resizing = false;
   }
   

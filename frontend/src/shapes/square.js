@@ -3,8 +3,8 @@ import {Shape} from "./shape.js";
 import gsap from 'gsap';
 
 export class Square extends Shape{
-  constructor(x, y, shapeType) {
-    super(x, y, shapeType);
+  constructor(x, y, shapeType, id=null) {
+    super(x, y, shapeType, id);
     this.startingCoordinate = { x: x, y: y }; //upperleftCorner
     this.roundValue = 0;
   }

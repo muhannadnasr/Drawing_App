@@ -3,8 +3,8 @@ import {Shape} from "./shape.js";
 import gsap from 'gsap';
 
 export class Triangle extends Shape{
-  constructor(x, y, shapeType) {
-    super(x, y, shapeType);
+  constructor(x, y, shapeType, id=null) {
+    super(x, y, shapeType, id);
     //    B
     //  /   \
     // A     C

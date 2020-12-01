@@ -2,16 +2,14 @@ package com.example.backend;
 
 import javax.xml.transform.TransformerException;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
 public class Api {
     ShapeBuilder shapeBuilder = new ShapeBuilder();
     Controller controller = new Controller();
+    JsonConverter jsonConverter = new JsonConverter();
     Xml xml = new Xml();
 
     // Creation and undo/redo
@@ -43,7 +41,7 @@ public class Api {
         double startingX = Double.parseDouble(startingCoordinates[0]);
         double startingY = Double.parseDouble(startingCoordinates[1]);
 
-        String [] endingCoordinates = startingPoint.split(",");
+        String [] endingCoordinates = endingPoint.split(",");
         double endingX = Double.parseDouble(endingCoordinates[0]);
         double endingY = Double.parseDouble(endingCoordinates[1]);
                   
@@ -87,7 +85,7 @@ public class Api {
         double startingX = Double.parseDouble(startingCoordinates[0]);
         double startingY = Double.parseDouble(startingCoordinates[1]);
 
-        String [] endingCoordinates = startingPoint.split(",");
+        String [] endingCoordinates = endingPoint.split(",");
         double endingX = Double.parseDouble(endingCoordinates[0]);
         double endingY = Double.parseDouble(endingCoordinates[1]);
 
@@ -98,7 +96,7 @@ public class Api {
     }
 
     // Change multiPointShape fearues
-    @PostMapping("updateShapePosAndSize")
+    @PostMapping("/updateShapePosAndSize")
     public void changeShapePosAndSize(  @RequestParam int id, @RequestParam String upperLeftCorner,
                                         @RequestParam double width, @RequestParam double height) {
         
@@ -114,26 +112,32 @@ public class Api {
         refreshShape(id, multiPointShape);
     }
 
-    @PostMapping("updateOutlineColor")
+    @PostMapping("/updateOutlineColor")
     public void changeOutlineColor(@RequestParam int id, @RequestParam String outlineColor) {
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
         multiPointShape.setOutlineColor(outlineColor);
         refreshShape(id, multiPointShape);
     }
 
-    @PostMapping("updateFillOpacity")
+    @PostMapping("/updateFillOpacity")
     public void changeFillOpacity(@RequestParam int id, @RequestParam double opacity) {
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
         multiPointShape.setFillOpacity(opacity);
         refreshShape(id, multiPointShape);
     }
-    // Utilities
+    // Save
     public void SaveXml(String location) {
         try {
             xml.javaToXml(shapeBuilder.getHashMap(), location);
         } catch (TransformerException e) {
             e.printStackTrace();
         }
+    }
+    // get data of a shape
+    @GetMapping("/getShapeData")
+    public String getShapeData(@RequestParam int id){
+        Shape shape = getShape(id);
+        return jsonConverter.ShapeToJsonString(shape);
     }
 
     // Doesn't need URL Mapping

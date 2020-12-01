@@ -132,6 +132,7 @@ export class LineWrapper{
       if(!this.resizing || !store.getters.boardMouseDown) {
         clearInterval(tracker);
         this.enable();
+        updateLinePos(this.shapeWrapped);
       }
       else {
         const updatedX = window.mouseX 
@@ -150,6 +151,7 @@ export class LineWrapper{
       if(!this.resizing || !store.getters.boardMouseDown) {
         clearInterval(tracker);
         this.enable();
+        updateLinePos(this.shapeWrapped);
       }
       else {
         const updatedX = window.mouseX 
@@ -160,8 +162,7 @@ export class LineWrapper{
     }, 10); 
   }
 
-  _pointSelectorMouseUpAction(){
-    updateLinePos(this.shapeWrapped);
+  _pointSelectorMouseUpAction(){    
     this.resizing = false;
   }
   
@@ -183,7 +184,6 @@ export class LineWrapper{
 
   _mouseUpAction(){
     this._clickAcion();
-    updateLinePos(this.shapeWrapped);
     this.mouseDown = false;
   }
   
@@ -191,8 +191,22 @@ export class LineWrapper{
     let prevX = window.mouseX;
     let prevY = window.mouseY - 110;
 
+    const oldStartingPoint = {
+      x: this.shapeWrapped.startingPoint.x,
+      y: this.shapeWrapped.startingPoint.y,
+    }
+    const oldEndingPoint = {
+      x: this.shapeWrapped.endingPoint.x,
+      y: this.shapeWrapped.endingPoint.y,
+    }
     const tracker = setInterval(() => {
       if(!this.mouseDown || !store.getters.boardMouseDown) {
+        if( this.shapeWrapped.startingPoint.x !== oldStartingPoint.x ||
+          this.shapeWrapped.startingPoint.y !== oldStartingPoint.y ||
+          this.shapeWrapped.endingPoint.x !== oldEndingPoint.x ||
+          this.shapeWrapped.endingPoint.y !== oldEndingPoint.y) {
+            updateLinePos(this.shapeWrapped);
+          }
         clearInterval(tracker);
       }
       else {

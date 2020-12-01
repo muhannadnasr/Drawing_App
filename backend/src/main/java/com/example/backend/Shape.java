@@ -3,8 +3,8 @@ package com.example.backend;
 public abstract class Shape implements Cloneable{
     private int id;
     private String type;
-    private String fillColor = "default_FillColor";
-    private double thickness = 0.0;
+    private String fillColor = "rgb(94,202,210)";
+    private double thickness = 1.0;
 
     public Shape(int id, String type){
         this.id = id;
