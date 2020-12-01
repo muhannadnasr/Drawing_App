@@ -30,7 +30,13 @@ public class Api {
         HashMap<Integer, Shape> undoMap = controller.performUndo();
 
         if (undoMap == null) return "empty";
-        shapeBuilder.setHashMap(undoMap);
+        HashMap<Integer, Shape> current = new HashMap<Integer, Shape>();
+        for(HashMap.Entry<Integer, Shape> mapElement : undoMap.entrySet()){
+            Integer ID = mapElement.getKey();
+            Shape shapeClone = (undoMap.get(ID)).clone();
+            current.put(ID, shapeClone);
+        }
+        shapeBuilder.setHashMap(current);
         return jsonConverter.jsonStrFromHashMap(undoMap);
     }
 
@@ -39,8 +45,13 @@ public class Api {
         HashMap<Integer, Shape> redoMap = controller.performRedo();
 
         if (redoMap == null) return "empty";
-
-        shapeBuilder.setHashMap(redoMap);
+        HashMap<Integer, Shape> current = new HashMap<Integer, Shape>();
+        for(HashMap.Entry<Integer, Shape> mapElement : redoMap.entrySet()){
+            Integer ID = mapElement.getKey();
+            Shape shapeClone = (redoMap.get(ID)).clone();
+            current.put(ID, shapeClone);
+        }
+        shapeBuilder.setHashMap(current);
         return jsonConverter.jsonStrFromHashMap(redoMap);
     }
 

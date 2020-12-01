@@ -8,7 +8,7 @@ public class Controller{
     private Stack<HashMap<Integer, Shape>> redo = new Stack<>();
     
     public HashMap<Integer, Shape> performUndo(){
-        HashMap<Integer, Shape> undoed;
+        HashMap<Integer, Shape> undoed = new HashMap<Integer, Shape>();
         if(undo.size() != 0){
             undoed = undo.pop();
             redo.push(undoed);
@@ -18,7 +18,7 @@ public class Controller{
         
     }
     public HashMap<Integer, Shape> performRedo(){
-        HashMap<Integer, Shape> redoed;
+        HashMap<Integer, Shape> redoed = new HashMap<Integer, Shape>();
         redoed = null;
         if(redo.size() != 0){
             redoed = redo.pop();
