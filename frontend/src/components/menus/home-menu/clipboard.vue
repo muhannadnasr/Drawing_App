@@ -43,7 +43,7 @@ export default {
   },
   computed: mapGetters(['currentSelector']),
   methods: {
-    ...mapActions(['setCurrentSelector']),
+    ...mapActions(['setCurrentSelector', 'pushNewShape']),
     copyShape() {
       this.currentCopied = this.currentSelector.shapeWrapped;
     },
@@ -118,6 +118,7 @@ export default {
       updateThickness(newShape);
 
       // newShape.selector.disablePrevSelector(); 
+      this.pushNewShape(newShape);
       newShape.selector.enable();
       newShape.selector.clicked = false;
       this.setCurrentSelector(newShape.selector);

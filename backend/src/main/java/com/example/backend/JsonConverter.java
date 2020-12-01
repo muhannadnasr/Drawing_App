@@ -3,8 +3,11 @@ package com.example.backend;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class JsonConverter{
-    public String ShapeToJsonString(Shape shape){
+    public String shapeToJsonString(Shape shape){
         ObjectMapper mapper = new ObjectMapper();
         String jsonStr = "";
         try {
@@ -13,5 +16,17 @@ public class JsonConverter{
             e.printStackTrace();
         }
         return jsonStr;
+    }
+
+    public String jsonStrFromHashMap(HashMap<Integer, Shape> map) {
+        String jsonStr = "{" + "\"Shapes\"" + ":" + " " + "{" + "\"Shape\"" + ":" + " " + "[" + "\n";
+        for (Map.Entry<Integer, Shape> set : map.entrySet()) {
+            jsonStr += shapeToJsonString(set.getValue());
+            jsonStr += "," + "\n";
+        }
+        jsonStr = jsonStr.substring(0, jsonStr.length() - 2);
+        jsonStr += "\n] } \n}";
+        return jsonStr;
+
     }
 }

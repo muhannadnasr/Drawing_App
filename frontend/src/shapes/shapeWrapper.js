@@ -292,6 +292,7 @@ export class ShapeWrapper{
   
   _trackMovement(){
     if(store.getters.isDrawing) return;
+
     let prevX = window.mouseX;
     let prevY = window.mouseY - 110;
     
@@ -353,6 +354,19 @@ export class ShapeWrapper{
     prevSelector.mouseDown = false;
     if(prevSelector.id !== this.id) prevSelector.clicked = false;
     store.commit('setSelector', this);
+  }
+
+  remove(){
+    this.wrapper.remove();
+    this.corners.lowerLeft.remove();
+    this.corners.lowerRight.remove();
+    this.corners.upperLeft.remove();
+    this.corners.upperRight.remove();
+
+    this.edges.left.remove();
+    this.edges.right.remove();
+    this.edges.up.remove();
+    this.edges.down.remove();
   }
 
   //calculations

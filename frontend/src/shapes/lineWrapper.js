@@ -91,9 +91,6 @@ export class LineWrapper{
     this.pointsSelectors.endingPoint.setAttribute("cx", this.shapeWrapped.endingPoint.x);
     this.pointsSelectors.endingPoint.setAttribute("cy", this.shapeWrapped.endingPoint.y);
   }
-  removeWrapper(){
-    this.wrapper.remove();
-  }
 
   _addEventHandlers(){
     this.wrapper.onmousedown = () => this._mouseDownAction();
@@ -242,5 +239,10 @@ export class LineWrapper{
     prevSelector.mouseDown = false;
     if(prevSelector.id !== this.id) prevSelector.clicked = false;
     store.commit('setSelector', this);
+  }
+  remove(){
+    this.wrapper.remove();
+    this.pointsSelectors.startingPoint.remove();
+    this.pointsSelectors.endingPoint.remove();
   }
 }

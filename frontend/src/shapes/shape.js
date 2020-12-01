@@ -38,4 +38,9 @@ export class Shape {
         this.thickness = thickness;
         this.shape.setAttribute("stroke-width", thickness);
     }
+
+    remove(){
+        this.selector.remove();
+        this.shape.remove();
+    }
 }

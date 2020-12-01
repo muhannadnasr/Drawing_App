@@ -14,38 +14,31 @@ public class Api {
     JsonConverter jsonConverter = new JsonConverter();
     Xml xml = new Xml();
 
+    //testing
+    @PostMapping("reset")
+    public void reset(){
+        shapeBuilder.resetShapesMap();
+        controller.resetUndoRedo();
+    }
     // Creation and undo/redo
-    public HashMap<Integer, Shape> performUndo() throws CloneNotSupportedException {
-        HashMap<Integer, Shape> current = new HashMap<Integer, Shape>();
-        HashMap<Integer, Shape> undoMap = performUndo();
-        if(undoMap != null){
-            for(HashMap.Entry<Integer, Shape> mapElement : undoMap.entrySet()){
-                Integer ID = (Integer)mapElement.getKey();
-                Shape shapeClone = (undoMap.get(ID)).clone();
-                current.put(ID, shapeClone);
-            }
-        }
-        shapeBuilder.setHashMap(current);
-        return undoMap;
+    @GetMapping("/undo")
+    public String performUndo() throws CloneNotSupportedException {
+        HashMap<Integer, Shape> undoMap = controller.performUndo();
+
+        if (undoMap == null) return "empty";
+
+        shapeBuilder.setHashMap(undoMap);
+        return jsonConverter.jsonStrFromHashMap(undoMap);
     }
 
-    public HashMap<Integer, Shape> performRedo() throws CloneNotSupportedException {
-        HashMap<Integer, Shape> current = new HashMap<Integer, Shape>();
-        HashMap<Integer, Shape> redoMap = performRedo();
-        if(redoMap != null){
-            for(HashMap.Entry<Integer, Shape> mapElement : redoMap.entrySet()){
-                Integer ID = (Integer)mapElement.getKey();
-                Shape shapeClone = (redoMap.get(ID)).clone();
-                current.put(ID, shapeClone);
-            }
-        }
-        shapeBuilder.setHashMap(current);
-        return redoMap;
-    }
+    @GetMapping("/redo")
+    public String performRedo() throws CloneNotSupportedException {
+        HashMap<Integer, Shape> redoMap = controller.performRedo();
 
+        if (redoMap == null) return "empty";
 
-    public Shape getShape(int id) {
-        return shapeBuilder.getShape(id);
+        shapeBuilder.setHashMap(redoMap);
+        return jsonConverter.jsonStrFromHashMap(redoMap);
     }
 
     @PostMapping("/createLine")
@@ -53,17 +46,7 @@ public class Api {
                             @RequestParam String startingPoint, 
                             @RequestParam String endingPoint) throws CloneNotSupportedException {
 
-        //setting up the point object                                   
-        String [] startingCoordinates = startingPoint.split(",");
-        double startingX = Double.parseDouble(startingCoordinates[0]);
-        double startingY = Double.parseDouble(startingCoordinates[1]);
-
-        String [] endingCoordinates = endingPoint.split(",");
-        double endingX = Double.parseDouble(endingCoordinates[0]);
-        double endingY = Double.parseDouble(endingCoordinates[1]);
-                  
-        shapeBuilder.buildLine(id,  new Point(startingX, startingY), 
-                                    new Point(endingX, endingY));
+        shapeBuilder.buildLine(id,  getPointCoordinates(startingPoint), getPointCoordinates(endingPoint));
         controller.addUndo(shapeBuilder.getHashMap()); // after adding shape, we add clone of map to undo stack
     }
 
@@ -71,13 +54,8 @@ public class Api {
     public void createMultiPointShape(  @RequestParam int id, @RequestParam String type, 
                                         @RequestParam String upperLeftCorner, 
                                         @RequestParam double width, @RequestParam double height) throws CloneNotSupportedException {
-        
-        //setting up the point object                                   
-        String [] coordinates = upperLeftCorner.split(",");
-        double x = Double.parseDouble(coordinates[0]);
-        double y = Double.parseDouble(coordinates[1]);
 
-        shapeBuilder.buildShape(id, type, new Point(x, y), width, height);
+        shapeBuilder.buildShape(id, type, getPointCoordinates(upperLeftCorner), width, height);
         controller.addUndo(shapeBuilder.getHashMap());
     }
     // change shape features
@@ -100,18 +78,10 @@ public class Api {
     @PostMapping("/updateLinePos")
     public void changeLinePos(@RequestParam int id, @RequestParam String startingPoint, @RequestParam String endingPoint)
             throws CloneNotSupportedException {
-        //setting up the point object                                   
-        String [] startingCoordinates = startingPoint.split(",");
-        double startingX = Double.parseDouble(startingCoordinates[0]);
-        double startingY = Double.parseDouble(startingCoordinates[1]);
-
-        String [] endingCoordinates = endingPoint.split(",");
-        double endingX = Double.parseDouble(endingCoordinates[0]);
-        double endingY = Double.parseDouble(endingCoordinates[1]);
 
         Line line = (Line) getShape(id);
-        line.setStartingPoint(new Point(startingX, startingY));
-        line.setEndingPoint(new Point(endingX, endingY));
+        line.setStartingPoint(getPointCoordinates(startingPoint));
+        line.setEndingPoint(getPointCoordinates(endingPoint));
         refreshShape(id, line);
     }
 
@@ -119,14 +89,9 @@ public class Api {
     @PostMapping("/updateShapePosAndSize")
     public void changeShapePosAndSize(  @RequestParam int id, @RequestParam String upperLeftCorner,
                                         @RequestParam double width, @RequestParam double height) throws CloneNotSupportedException {
-        
-        //setting up the point object                                   
-        String [] coordinates = upperLeftCorner.split(",");
-        double x = Double.parseDouble(coordinates[0]);
-        double y = Double.parseDouble(coordinates[1]);
 
         MultiPointShape multiPointShape = (MultiPointShape) getShape(id);
-        multiPointShape.setUpperLeftCorner(new Point(x, y));
+        multiPointShape.setUpperLeftCorner(getPointCoordinates(upperLeftCorner));
         multiPointShape.setWidth(width);
         multiPointShape.setHeight(height);
         refreshShape(id, multiPointShape);
@@ -159,13 +124,24 @@ public class Api {
     @GetMapping("/getShapeData")
     public String getShapeData(@RequestParam int id){
         Shape shape = getShape(id);
-        return jsonConverter.ShapeToJsonString(shape);
+        return jsonConverter.shapeToJsonString(shape);
     }
 
     // Doesn't need URL Mapping
-    public void refreshShape(Integer ID, Shape shape) throws CloneNotSupportedException {
+    private void refreshShape(Integer ID, Shape shape) throws CloneNotSupportedException {
         shapeBuilder.updateShape(ID, shape); // after editing shape, we update the shape in the map
         controller.addUndo(shapeBuilder.getHashMap()); // after editing shape, we add clone of shape to undo stack
+    }
+
+    private Shape getShape(int id) {
+        return shapeBuilder.getShape(id);
+    }
+
+    private Point getPointCoordinates(String point){
+        String [] startingCoordinates = point.split(",");
+        double x = Double.parseDouble(startingCoordinates[0]);
+        double y = Double.parseDouble(startingCoordinates[1]);
+        return new Point(x, y);
     }
 
 }

@@ -1,13 +1,21 @@
 <template>
   <div id="undo-redo">
-    <div class="sub-elem undo"><img src="../../../assets/editingSec-Icons/undo.png" width="20"></div>
-    <div class="sub-elem redo"><img src="../../../assets/editingSec-Icons/redo.png" width="20"></div>
+    <div class="sub-elem undo" @click="undo()">
+      <img src="../../../assets/editingSec-Icons/undo.png" width="20">
+    </div>
+    <div class="sub-elem redo" @click="redo()">
+      <img src="../../../assets/editingSec-Icons/redo.png" width="20">
+    </div>
     <div class="label">Undo</div>
     <div class="seperator"></div>
   </div>
 </template>
 
 <script>
+import { reCreateShape } from '../../../helpers';
+import { mapGetters, mapActions } from 'vuex';
+import axios from 'axios';
+
 export default {
   name: 'undoRedo',
   data() {
@@ -15,8 +23,39 @@ export default {
       
     }
   },
+  computed: mapGetters(['shapesDrawn']),
   methods: {
-
+    ...mapActions(['clearShapesDrawn']),
+    undo(){
+      axios.get('http://localhost:8085/undo')
+      .then( (response) => {
+        this.clearBoard();
+        if(response.data !== "empty") this.reconstructBoard(response.data);
+      })
+      .catch( (error) => console.log(error));
+    },
+    redo(){
+      axios.get('http://localhost:8085/redo')
+      .then( (response) => {
+        if(response.data !== "empty") {
+          this.clearBoard();
+          this.reconstructBoard(response.data);
+        }
+      })
+      .catch( (error) => console.log(error));
+    },
+    reconstructBoard(shapesInfo){
+      const shapes = shapesInfo.Shapes.Shape;
+      for (let shape of shapes) {
+        reCreateShape(shape);
+      }
+    },
+    clearBoard(){
+      for(let shape of this.shapesDrawn){
+        shape.remove();
+      }
+      this.clearShapesDrawn();
+    },
   },
   mounted() {
 

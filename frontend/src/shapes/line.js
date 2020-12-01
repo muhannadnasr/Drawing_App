@@ -65,6 +65,11 @@ export class Line {
     _loadPoints(){
       return `${this.startingPoint.x},${this.startingPoint.y} ${this.endingPoint.x},${this.endingPoint.y}`;
     }
+
+    remove(){
+      this.selector.remove();
+      this.shape.remove();
+    }
 }
 
 

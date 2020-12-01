@@ -3,7 +3,7 @@ package com.example.backend;
 import java.util.HashMap;
 
 public class ShapeBuilder {
-    private HashMap<Integer, Shape> shapes = new HashMap<Integer, Shape>();
+    private HashMap<Integer, Shape> shapes = new HashMap<>();
 
     public void buildLine(int id, Point startingPoint, Point endingPoint){
         Shape newLine =  new Line(id, "line", startingPoint, endingPoint);
@@ -25,4 +25,5 @@ public class ShapeBuilder {
     public void setHashMap(HashMap<Integer, Shape> shapes){
         this.shapes = shapes;
     }
+    public void resetShapesMap() {shapes.clear();}
 }

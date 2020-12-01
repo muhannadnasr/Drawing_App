@@ -62,7 +62,7 @@ export default {
   },
   computed: mapGetters(['isDrawing', 'shapeType', 'isResizing', 'resizingDirection', 'currentSelector']),
   methods:{
-    ...mapActions(['disableDrawingMode', 'setCurrentSelector', 'setBoardMouseDown', 'setSelecitngStatus']),
+    ...mapActions(['disableDrawingMode', 'setCurrentSelector', 'setBoardMouseDown', 'setSelecitngStatus', 'pushNewShape']),
     //Drawing Shapes
     mouseOverHandling(){
       const mousePosTracker = setInterval(() => {
@@ -135,6 +135,8 @@ export default {
           pushLine(this.currentShape.shape);
           updateFillColor(this.currentShape.shape);
         }
+
+        this.pushNewShape(this.currentShape.shape);
         this.disableDrawingMode();
         this.setSelecitngStatus(true);
       }

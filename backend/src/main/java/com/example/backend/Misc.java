@@ -55,7 +55,7 @@ class test {
             sq.setLength(10);
             sq.setWidth(15);
             sq.setCorner(new Point(1, 2));
-            String output = obj2json(sq);
+            String output = obj2json("empty");
             System.out.println(output);
    }
 }

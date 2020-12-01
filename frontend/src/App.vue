@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 // import menuNav from "./components/menuNav.vue";
 import appHeader from "./components/appHeader.vue";
 import board from './components/board.vue';
@@ -17,6 +18,10 @@ export default {
     appHeader,
     homeMenu,
     board,
+  },
+  beforeMount(){
+    axios.post('http://localhost:8085/reset')
+    .catch( (error) => console.log(error));
   }
 }
 </script>
