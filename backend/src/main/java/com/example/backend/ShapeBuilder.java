@@ -25,5 +25,10 @@ public class ShapeBuilder {
     public void setHashMap(HashMap<Integer, Shape> shapes){
         this.shapes = shapes;
     }
-    public void resetShapesMap() {shapes.clear();}
+    public void resetShapesMap() {
+        shapes.clear();
+    }
+    public void deleteShape(Integer ID){
+        shapes.remove(ID);
+    }
 }
