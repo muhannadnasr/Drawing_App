@@ -39,7 +39,6 @@ function updateShapePosAndSize(shape){
     width: shape.width,
     height: shape.height,
   }})
-  .then( () => console.log("pos updated"))
   .catch( (error) => console.log(error));
 }
 

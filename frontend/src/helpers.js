@@ -1,4 +1,26 @@
-import store from "./store"
+import { Square } from "./shapes/square.js";
+import { Ellipse } from "./shapes/ellipse.js";
+import { Triangle } from "./shapes/triangle.js";
+import { Line } from "./shapes/line.js";
+import { ShapeWrapper } from "./shapes/shapeWrapper.js";
+import { LineWrapper } from "./shapes/lineWrapper.js";
+import { pushShape } from "./backEndComm/shapeComm";
+import { pushLine } from "./backEndComm/lineComm";
+import { updateFillColor } from "./backEndComm/comm.js";
+import { updateThickness } from "./backEndComm/comm.js";
+import { updateFillOpacity } from "./backEndComm/shapeComm.js";
+import { updateOutlineColor } from "./backEndComm/shapeComm.js";
+import store from "./store";
+
+const shapeTypes = {
+  square: 'square',
+  rectangle: 'rectangle',
+  circle: 'circle',
+  ellipse: 'ellipse',
+  triangle: 'triangle',
+  rhombus: 'rhombus',
+  line: 'line',
+};
 
 export function rgb(R, G, B){
   return `rgb(${R},${G},${B})`;
@@ -9,12 +31,70 @@ export function generateShapeId(){
   return shapeId++;
 }
 
+let zIndex = 2;
 export function getZIndex(){
-  const newZIndex = store.getters.maxCurrZIndex;
-  store.commit("setMaxZIndex", newZIndex +1)
-  return newZIndex;
+  return zIndex++;
 }
 
 export function stringfyPoint(x, y){
   return `${x},${y}`;
+}
+
+export function reCreateShape(shapeInfo, copy = false){ // shape info passed as json
+  let newShape = null;
+  const shapeType = shapeInfo.type;
+  const shapeId = copy ? null : shapeInfo.id;
+  if (shapeType !== shapeTypes.line){
+    const upperLeftConrner = {
+      x: shapeInfo.upperLeftCorner.x + (copy ? 30 : 0),
+      y: shapeInfo.upperLeftCorner.y + (copy ? 30 : 0),
+    }
+    const width = shapeInfo.width;
+    const height = shapeInfo.height;
+    const fillOpacity = shapeInfo.fillOpacity;
+    const outlineColor = shapeInfo.outlineColor;
+
+    if (shapeType === shapeTypes.square || shapeType === shapeTypes.rectangle){
+      newShape = new Square(upperLeftConrner.x, upperLeftConrner.y, shapeType, shapeId);
+    }
+    else if(shapeType === shapeTypes.circle || shapeType === shapeTypes.ellipse){
+      newShape = new Ellipse(upperLeftConrner.x, upperLeftConrner.y, shapeType, shapeId);
+    }
+    else if(shapeType === shapeTypes.triangle){
+      newShape = new Triangle(upperLeftConrner.x, upperLeftConrner.y, shapeType, shapeId);
+    }
+    newShape.create(width, height);
+    newShape.selector = new ShapeWrapper(newShape);
+    pushShape(newShape);
+    newShape.updateFillOpacity(fillOpacity);
+    updateFillOpacity(newShape);
+    newShape.updateOutlineColor(outlineColor);
+    updateOutlineColor(newShape);
+  }
+  else {
+    const startingPoint = {
+      x: shapeInfo.startingPoint.x + (copy ? 30 : 0),
+      y: shapeInfo.startingPoint.y,
+    }
+    const endingPoint = {
+      x: shapeInfo.endingPoint.x + (copy ? 30 : 0),
+      y: shapeInfo.endingPoint.y,
+    }
+    newShape = new Line(startingPoint.x, startingPoint.y, shapeType, shapeId);
+    newShape.create(startingPoint.x, startingPoint.y, endingPoint.x, endingPoint.y);
+    newShape.selector = new LineWrapper(newShape);
+    pushLine(newShape);
+  }
+
+  const fillColor = shapeInfo.fillColor;
+  const thickness = shapeInfo.thickness;
+  newShape.updateFillColor(fillColor);
+  updateFillColor(newShape);
+  newShape.updateThickness(thickness);
+  updateThickness(newShape);
+
+  // newShape.selector.disablePrevSelector(); 
+  newShape.selector.enable();
+  newShape.selector.clicked = false;
+  store.commit("setSelector", newShape.selector);
 }

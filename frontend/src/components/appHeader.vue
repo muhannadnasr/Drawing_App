@@ -1,6 +1,6 @@
 <template>
   <div id="header">
-      <div id="file-name">Flow chart</div>
+      <div id="file-name">Drawing App</div>
   </div>
 </template>
 

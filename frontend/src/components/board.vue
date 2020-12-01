@@ -20,6 +20,7 @@ import { Line } from '../shapes/line.js';
 import { pushShape } from '../backEndComm/shapeComm.js';
 import { pushLine } from '../backEndComm/lineComm.js';
 import { mapGetters, mapActions } from 'vuex';
+import { updateFillColor } from '../backEndComm/comm.js';
 export default {
   name: 'board',
   data(){
@@ -132,6 +133,7 @@ export default {
           this.currentShape.shape.selector = new LineWrapper(this.currentShape.shape);
           this.setCurrentSelector(this.currentShape.shape.selector);
           pushLine(this.currentShape.shape);
+          updateFillColor(this.currentShape.shape);
         }
         this.disableDrawingMode();
         this.setSelecitngStatus(true);
@@ -140,8 +142,7 @@ export default {
     },
     createShape(width, height){
       if (this.isSquare() || this.isRectangle()){
-        const type = this.shapeType;
-        this.currentShape.shape = new Square(this.currentShape.startingPos.x, this.currentShape.startingPos.y, type);
+        this.currentShape.shape = new Square(this.currentShape.startingPos.x, this.currentShape.startingPos.y, this.shapeType);
       }
       else if(this.isCircle() || this.isEllipse()){
         this.currentShape.shape = new Ellipse(this.currentShape.startingPos.x, this.currentShape.startingPos.y, this.shapeType);

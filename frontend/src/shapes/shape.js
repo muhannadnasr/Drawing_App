@@ -2,8 +2,9 @@ import {rgb} from "../helpers.js";
 import {generateShapeId} from "../helpers.js";
 
 export class Shape {
-    constructor(x, y, shapeType) {
-        this.shapeId = generateShapeId();
+    constructor(x, y, shapeType, id=null) {
+        if(id === null) this.shapeId = generateShapeId();
+        else this.shapeId = id;
         this.cssId = `${shapeType}-${this.shapeId}`;
         this.shape = null;
         this.selector = null;

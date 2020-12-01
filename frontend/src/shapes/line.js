@@ -4,8 +4,9 @@ import {generateShapeId} from "../helpers.js";
 import gsap from 'gsap';
 
 export class Line {
-    constructor(x, y, shapeType) {
-      this.shapeId = generateShapeId();
+    constructor(x, y, shapeType, id=null) {
+      if(id === null) this.shapeId = generateShapeId();
+      else this.shapeId = id;
       this.shapeType = shapeType;
       this.cssId = `${shapeType}-${this.shapeId}`;
       this.shape = null;
