@@ -37,6 +37,7 @@ public class Controller{
             shapesClone.put(ID, shapeClone);
         }
         undo.push(shapesClone);
+        redo.clear();
     }
 
     public void resetUndoRedo(){
