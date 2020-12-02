@@ -1,13 +1,8 @@
 package com.example.backend;
 
-import javax.swing.*;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 @RestController
 @CrossOrigin
@@ -110,13 +105,23 @@ public class Api {
     }
     
     // Save
-    @PostMapping("/save")
-    public void SaveXml(String location) {
+    @GetMapping("/saveXml")
+    public String SaveXml() {
         try {
-            xml.javaToXml(shapeBuilder.getHashMap(), location);
+            return xml.javaToXml(shapeBuilder.getHashMap());
         } catch (TransformerException e) {
             e.printStackTrace();
         }
+        return "error";
+    }
+    //save and load
+    @GetMapping("/saveJson")
+    public String getAllShapesJsonInfo(){
+        return jsonConverter.jsonStrFromHashMap(shapeBuilder.getHashMap());
+    }
+    @GetMapping("/xmlToJson")
+    public String xmlToJson(String xmlString){
+        return jsonConverter.jsonStrFromXml(xmlString);
     }
     // copy and paste
     @GetMapping("/getShapeData")

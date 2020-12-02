@@ -40,7 +40,6 @@ export function reCreateShape(shapeInfo){ // shape info passed as json
   let newShape = null;
   const shapeType = shapeInfo.type;
   const shapeId = shapeInfo.id;
-  console.log(shapeId);
   if (shapeType !== shapeTypes.line){
     const upperLeftConrner = {
       x: shapeInfo.upperLeftCorner.x,

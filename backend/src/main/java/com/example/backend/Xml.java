@@ -20,8 +20,8 @@ import org.w3c.dom.Element;
 // import org.w3c.dom.NodeList;
 // import org.xml.sax.SAXException;
 
-import java.io.File;
 // import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashMap;
 // import java.util.Iterator;
 
@@ -66,7 +66,7 @@ public class Xml {
     //     }
     //     return answer;
     // }
-    public String javaToXml(HashMap<Integer, Shape> shapes, String location) throws TransformerException {
+    public String javaToXml(HashMap<Integer, Shape> shapes /*,String location*/) throws TransformerException {
         
         // INSERTING OBJECTS IN MAP FOR TESTING
         //HashMap <Integer, Shape> shapes = entry;
@@ -102,33 +102,37 @@ public class Xml {
 
                 // determining type of the shape
                 isLine = (shapes.get(key)).getType().equalsIgnoreCase("line");
-                isMulti = (shapes.get(key)).getType().equalsIgnoreCase("multi");
+                String shapeType = (shapes.get(key)).getType();
+                System.out.println(shapeType);
+
+                isMulti = isMultiPointShape(shapeType);
+                System.out.println(isMulti);
                 
                 if(isLine){
                     Line hold = (Line)shapes.get(key);
                     Point stpt = hold.getStartingPoint();
                     Point endpt = hold.getEndingPoint();
 
-                    createShapeTags(document, shape, "Type", String.valueOf(hold.getType()));
-                    createShapeTags(document, shape, "StartingPoint", String.valueOf(stpt.getX()) + "," + String.valueOf(stpt.getY()));
-                    createShapeTags(document, shape, "EndingPoint", String.valueOf(endpt.getX()) + "," + String.valueOf(endpt.getY()));
+                    createShapeTags(document, shape, "type", String.valueOf(hold.getType()));
+                    createShapeTags(document, shape, "startingPoint", String.valueOf(stpt.getX()) + "," + String.valueOf(stpt.getY()));
+                    createShapeTags(document, shape, "endingPoint", String.valueOf(endpt.getX()) + "," + String.valueOf(endpt.getY()));
                 }
                 if(isMulti){
                     MultiPointShape hold = (MultiPointShape)shapes.get(key);
                     Point upperLeft = hold.getUpperLeftCorner();
 
-                    createShapeTags(document, shape, "Type", String.valueOf(hold.getType()));
-                    createShapeTags(document, shape, "UpperLeft", String.valueOf(upperLeft.getX()) + "," + String.valueOf(upperLeft.getY()));
-                    createShapeTags(document, shape, "Width", String.valueOf(hold.getWidth()));
-                    createShapeTags(document, shape, "Height", String.valueOf(hold.getHeight()));
-                    createShapeTags(document, shape, "OutlineColor", String.valueOf(hold.getOutlineColor()));
-                    createShapeTags(document, shape, "FillOpacity", String.valueOf(hold.getFillOpacity()));
+                    createShapeTags(document, shape, "type", String.valueOf(hold.getType()));
+                    createShapeTags(document, shape, "upperLeftCorner", String.valueOf(upperLeft.getX()) + "," + String.valueOf(upperLeft.getY()));
+                    createShapeTags(document, shape, "width", String.valueOf(hold.getWidth()));
+                    createShapeTags(document, shape, "height", String.valueOf(hold.getHeight()));
+                    createShapeTags(document, shape, "outlineColor", String.valueOf(hold.getOutlineColor()));
+                    createShapeTags(document, shape, "fillOpacity", String.valueOf(hold.getFillOpacity()));
                 }
             
             Shape object = (Shape)shapes.get(key);
             
-            createShapeTags(document, shape, "FillColor", String.valueOf(object.getFillColor()));
-            createShapeTags(document, shape, "Thickness", String.valueOf(object.getThickness()));
+            createShapeTags(document, shape, "fillColor", String.valueOf(object.getFillColor()));
+            createShapeTags(document, shape, "thickness", String.valueOf(object.getThickness()));
 
            }
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -136,21 +140,31 @@ public class Xml {
             transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
-
             DOMSource source = new DOMSource(document);
 
-            StreamResult streamResult = new StreamResult(new File(location)); // "E:\\XML_TEST\\data.xml"
+            StringWriter writer = new StringWriter();
+            StreamResult result = new StreamResult(writer);
+            transformer.transform(source, result);
+            String xmlstr =  writer.toString();
+            System.out.println(xmlstr);
+            return xmlstr;
 
-            transformer.transform(source, streamResult);
         } catch (ParserConfigurationException | TransformerConfigurationException e) {
             e.printStackTrace();
             return "failed";
         }
-        return "Success! Saved to XML successfully!";
     }
     private void createShapeTags(Document document, Element shape, String tagName, String value){
         Element newChild = document.createElement(tagName);
         newChild.appendChild(document.createTextNode(value));
         shape.appendChild(newChild);
+    }
+    private boolean isMultiPointShape(String shapeType){
+        if(shapeType.equals("square")) return true;
+        if(shapeType.equals("rectangle")) return true;
+        if(shapeType.equals("circle")) return true;
+        if(shapeType.equals("ellipse")) return true;
+        if(shapeType.equals("triangle")) return true;
+        return false;
     }
 }

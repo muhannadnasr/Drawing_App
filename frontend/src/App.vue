@@ -27,12 +27,14 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap'); */
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
+	font-family: 'Lato', sans-serif;
   overflow: hidden;
 }
 </style>

@@ -351,9 +351,11 @@ export class ShapeWrapper{
   }
   disablePrevSelector(){
     const prevSelector = store.getters.currentSelector;
-    prevSelector.disable();
-    prevSelector.mouseDown = false;
-    if(prevSelector.id !== this.id) prevSelector.clicked = false;
+    if(prevSelector !== null){
+      prevSelector.disable();
+      prevSelector.mouseDown = false;
+      if(prevSelector.id !== this.id) prevSelector.clicked = false;
+    }
     store.commit('setSelector', this);
   }
 
