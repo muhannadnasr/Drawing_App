@@ -4,9 +4,17 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class Controller{
+    private static Controller instance;
     private Stack<String> undo = new Stack<>();
     private Stack<String> redo = new Stack<>();
-    private JsonConverter jsonConverter = new JsonConverter();
+    private JsonConverter jsonConverter = JsonConverter.getInstance();
+
+    private Controller(){}
+
+    public static Controller getInstance(){
+        if(instance == null) instance = new Controller();
+        return instance;
+    }
     
     public String performUndo(){
         String undoed;

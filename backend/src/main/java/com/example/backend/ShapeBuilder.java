@@ -3,8 +3,16 @@ package com.example.backend;
 import java.util.HashMap;
 
 public class ShapeBuilder {
+    static private ShapeBuilder instance;
     private HashMap<Integer, Shape> shapes = new HashMap<>();
 
+    private ShapeBuilder(){}
+
+    public static ShapeBuilder getInstance(){
+        if(instance == null) instance = new ShapeBuilder();
+        return instance;
+    }
+    
     public void buildLine(int id, Point startingPoint, Point endingPoint){
         Shape newLine =  new Line(id, "line", startingPoint, endingPoint);
         updateShape(id, newLine);

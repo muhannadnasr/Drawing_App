@@ -29,6 +29,14 @@ import java.util.HashMap;
 @RestController
 @CrossOrigin
 public class Xml {
+    private static Xml instance;
+
+    private Xml(){}
+
+    public static Xml getInstance(){
+        if(instance == null) instance = new Xml();
+        return instance;
+    }
 
     // ## THIS IS A TEMPLATE FOR USING XML NOT THE REAL CODE!!! THE FOLLOWING FUNCTION MIGHT NOT BE NEEDED!
     // @GetMapping("/xmltojava")
