@@ -1,8 +1,13 @@
 package com.example.backend;
 
+import javax.swing.*;
 import javax.xml.transform.TransformerException;
 
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 
 @RestController
 @CrossOrigin
@@ -22,18 +27,18 @@ public class Api {
     @GetMapping("/undo")
     public String performUndo(){
         String undoMap = controller.performUndo();
+        shapeBuilder.resetShapesMap();
 
         if (undoMap == null) return "empty";
-        shapeBuilder.resetShapesMap();
         return undoMap;
     }
 
     @GetMapping("/redo")
     public String performRedo(){
         String redoMap = controller.performRedo();
+        shapeBuilder.resetShapesMap();
 
         if (redoMap == null) return "empty";
-        shapeBuilder.resetShapesMap();
         return redoMap;
     }
 
@@ -105,6 +110,7 @@ public class Api {
     }
     
     // Save
+    @PostMapping("/save")
     public void SaveXml(String location) {
         try {
             xml.javaToXml(shapeBuilder.getHashMap(), location);

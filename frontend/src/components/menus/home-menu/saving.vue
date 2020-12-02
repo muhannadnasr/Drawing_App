@@ -1,12 +1,13 @@
 <template>
   <div id="save-load">
-    <div class="sub-elem save" @click="firePopUp('save??')">
+    <div class="sub-elem save" @click="save()">
       <img src="../../../assets/saving/save.png" width="40">
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "savingControl",
   data(){
@@ -30,18 +31,57 @@ export default {
 
       const fileInput = document.createElement('input');
       fileInput.type = "file";
+      fileInput.webkitdirectory = true;
+      fileInput.multiple = true;
       popUp.appendChild(fileInput);
 
       const closeBtn = document.createElement('span');
       closeBtn.innerText = 'OK';
       closeBtn.className = 'pop-up-close-button';
       closeBtn.onclick = () => {
-        console.log(fileInput.value);
-        document.body.removeChild(popUpBackground);
+      //   const path = fileInput.value;
+      //   const folderPath = path.slice(0, path.lastIndexOf("\\")+1);
+      //   const savingPath = folderPath + "first.xml";
+      //   console.log(savingPath);
+      //   axios.post('http://localhost:8085/save', null, 
+      //   {params :{
+      //     location: savingPath,
+      //   }})
+      // .catch( (error) => console.log(error));
+        
+        document.body.removeChild(popUpBackground); 
       }
       popUp.appendChild(closeBtn);
+    },
+    save(){
+      const data = this.jsonInfo(1);
+      this.download("firstTry.json", data);
+    },
+    download(filename, text) {
+      var element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+
+      element.style.display = 'none';
+      document.body.appendChild(element);
+
+      element.click();
+
+      document.body.removeChild(element);
+    },
+    jsonInfo(id){
+        axios.get('http://localhost:8085/getShapeData', {
+          params :{
+            id: id,
+          }
+        })
+        .then( (response) => {
+          return response.data;
+        })
+        .catch( (error) => console.log(error));
+
     }
-  }
+  },
 }
 </script>
 
