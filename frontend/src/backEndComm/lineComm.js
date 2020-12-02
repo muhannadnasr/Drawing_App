@@ -22,7 +22,7 @@ function updateLinePos(line){
 }
 
 //for paste
-function pushLineCopy(line){
+function pushLineCopy(line, addUndo){
   axios.post('http://localhost:8085/createLineCopy', null, 
   {params :{
     id: line.shapeId,
@@ -30,6 +30,7 @@ function pushLineCopy(line){
     endingPoint: stringfyPoint(line.endingPoint.x, line.endingPoint.y),
     fillColor: line.fill,
     thickness: line.thickness,
+    addUndo: addUndo,
   }})
   .catch( (error) => console.log(error));
 }

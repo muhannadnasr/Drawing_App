@@ -4,21 +4,29 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class Controller{
-    private Stack<HashMap<Integer, Shape>> undo = new Stack<>();
-    private Stack<HashMap<Integer, Shape>> redo = new Stack<>();
+    private Stack<String> undo = new Stack<>();
+    private Stack<String> redo = new Stack<>();
+    private JsonConverter jsonConverter = new JsonConverter();
     
-    public HashMap<Integer, Shape> performUndo(){
-        HashMap<Integer, Shape> undoed;
+    public String performUndo(){
+        String undoed;
+        System.out.println("\n" + undo.size());
         if(undo.size() != 0){
+//            System.out.println("before\n" + undo.peek() + "\n");
             undoed = undo.pop();
+//            System.out.println("popped");
             redo.push(undoed);
         }
-        if(undo.size() != 0) return undo.peek();
+        System.out.println(undo.size() + "\n");
+        if(undo.size() != 0) {
+//            System.out.println("after\n" + undo.peek() + "\n");
+            return undo.peek();
+        }
         else return null;
         
     }
-    public HashMap<Integer, Shape> performRedo(){
-        HashMap<Integer, Shape> redoed;
+    public String performRedo(){
+        String redoed;
         redoed = null;
         if(redo.size() != 0){
             redoed = redo.pop();
@@ -27,16 +35,10 @@ public class Controller{
         return redoed;
     }
 
-    public void addUndo(HashMap<Integer, Shape> shapes) throws CloneNotSupportedException {
-        HashMap<Integer, Shape> shapesClone = new HashMap<>();
-
-        // Cloning each shape then placing in new HashMap
-        for(HashMap.Entry<Integer, Shape> mapElement : shapes.entrySet()){
-            Integer ID = mapElement.getKey();
-            Shape shapeClone = (shapes.get(ID)).clone();
-            shapesClone.put(ID, shapeClone);
-        }
-        undo.push(shapesClone);
+    public void addUndo(HashMap<Integer, Shape> shapes){
+        System.out.println("calledMe");
+        String jsonStr = jsonConverter.jsonStrFromHashMap(shapes);
+        undo.push(jsonStr);
         redo.clear();
     }
 

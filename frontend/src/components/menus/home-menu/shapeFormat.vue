@@ -16,7 +16,8 @@
     <div id="color-menu" class="menu-hidden">
       <div :class="['info-label', showOpacitySlider()]">Opacity</div>
       <div :class="['slider-wrap', showOpacitySlider()]">
-        <input id="opacity-adj" type="range" min="0" max="100" value="100" step="1" @mousedown="setOpacity()">
+        <input id="opacity-adj" type="range" min="0" max="100" value="100" step="1" 
+        @mousedown="setOpacity()" @mouseup="resetOpacity()">
         <div class="range-value" id="opacityValue">{{selectedShapeOpacity()}}</div>
       </div>
       <div :class="['info-label', showShapeThicknessSlider()]">Thickness</div>
@@ -96,8 +97,10 @@ export default {
       },
       opacity: 1,
       opacityText: '100%',
+      opacityMouseDown: false,
       thickness: 1,
       thicknessText: '1px',
+      thicknessMouseDown: false,
     }
   },
   computed: {
@@ -162,10 +165,11 @@ export default {
     setOpacity(){
       if(!this.isSelecting) return;
       if(this.currActiveMenu === null) return;
+      this.opacityMouseDown = true;
 
       const range = document.getElementById("opacity-adj");
       const opacityTracker = setInterval( () => {
-        if(!this.isSelecting) {
+        if(!this.opacityMouseDown) {
           clearInterval(opacityTracker);
           updateFillOpacity(this.currentSelector.shapeWrapped);
         }
@@ -175,6 +179,9 @@ export default {
           this.setShapeFillOpacity();
         }
       }, 50);
+    },
+    resetOpacity(){
+      this.opacityMouseDown = false;
     },
     setNoFill(){
       this.currActiveMenu.selectedColor = "transparent";
@@ -192,7 +199,8 @@ export default {
     setThickness(){
       if(!this.isSelecting) return;
       if(this.currActiveMenu === null) return;
-
+      this.thicknessMouseDown = true;
+      
       let range = null;
       if (this.currentSelector.shapeWrapped.shapeType === 'line'){
         range = document.getElementById("lineThickness-adj");
@@ -201,7 +209,7 @@ export default {
       }
       this.currentSelector.disable();
       const thicknessTracker = setInterval( () => {
-        if(!this.isSelecting) {
+        if(!this.thicknessMouseDown) {
           clearInterval(thicknessTracker);
           updateThickness(this.currentSelector.shapeWrapped);
         }
@@ -211,6 +219,7 @@ export default {
       }, 50);
     },
     thicknessMouseUpAction(){
+      this.thicknessMouseDown = false;
       this.currentSelector.enable();
     },
 

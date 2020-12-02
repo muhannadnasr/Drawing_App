@@ -44,7 +44,7 @@ function updateShapePosAndSize(shape){
 
 
 //for paste
-function pushShapeCopy(shape){
+function pushShapeCopy(shape, addUndo){
   axios.post('http://localhost:8085/createShapeCopy', null, 
   {params :{
     id: shape.shapeId,
@@ -56,6 +56,7 @@ function pushShapeCopy(shape){
     fillOpacity: shape.fillOpacity,
     thickness: shape.thickness,
     outlineColor: shape.outline,
+    addUndo: addUndo,
   }})
   .catch( (error) => console.log(error));
 }

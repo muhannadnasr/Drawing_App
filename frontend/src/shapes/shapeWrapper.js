@@ -211,6 +211,7 @@ export class ShapeWrapper{
       if(!this.resizing || !store.getters.boardMouseDown) {
         clearInterval(tracker);
         this.enable();
+        updateShapePosAndSize(this.shapeWrapped);
       }
       else {
         if(lockY){ //change the width = x

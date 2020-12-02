@@ -18,9 +18,9 @@ import { ShapeWrapper } from "../shapes/shapeWrapper.js";
 import { LineWrapper } from "../shapes/lineWrapper.js";
 import { Line } from '../shapes/line.js';
 import { pushShape } from '../backEndComm/shapeComm.js';
-import { pushLine } from '../backEndComm/lineComm.js';
+// import { pushLine } from '../backEndComm/lineComm.js';
 import { mapGetters, mapActions } from 'vuex';
-import { updateFillColor } from '../backEndComm/comm.js';
+import { pushLineCopy } from '../backEndComm/lineComm.js';
 export default {
   name: 'board',
   data(){
@@ -132,8 +132,8 @@ export default {
         else{
           this.currentShape.shape.selector = new LineWrapper(this.currentShape.shape);
           this.setCurrentSelector(this.currentShape.shape.selector);
-          pushLine(this.currentShape.shape);
-          updateFillColor(this.currentShape.shape);
+          // pushLine(this.currentShape.shape);
+          pushLineCopy(this.currentShape.shape, true);
         }
 
         this.pushNewShape(this.currentShape.shape);

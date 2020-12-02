@@ -25,14 +25,13 @@ export default {
   },
   computed: mapGetters(['shapesDrawn']),
   methods: {
-    ...mapActions(['clearShapesDrawn']),
+    ...mapActions(['clearShapesDrawn', 'setSelecitngStatus']),
     undo(){
       axios.get('http://localhost:8085/undo')
       .then( (response) => {
         console.log(response.data);
         this.clearBoard();
         if(response.data !== "empty") this.reconstructBoard(response.data);
-        this.testHash();
       })
       .catch( (error) => console.log(error));
     },
@@ -44,7 +43,6 @@ export default {
           this.clearBoard();
           this.reconstructBoard(response.data);
         }
-        this.testHash();
       })
       .catch( (error) => console.log(error));
     },
@@ -56,17 +54,11 @@ export default {
     },
     clearBoard(){
       for(let shape of this.shapesDrawn){
+        console.log(shape);
         shape.remove();
       }
       this.clearShapesDrawn();
     },
-    testHash(){
-      axios.get('http://localhost:8085/test')
-      .then( (response) => {
-        console.log("hash map", response.data);
-      })
-      .catch( (error) => console.log(error));
-    }
   },
   mounted() {
 

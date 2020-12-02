@@ -4,6 +4,8 @@ import { Triangle } from "./shapes/triangle.js";
 import { Line } from "./shapes/line.js";
 import { ShapeWrapper } from "./shapes/shapeWrapper.js";
 import { LineWrapper } from "./shapes/lineWrapper.js";
+import { pushShapeCopy } from "./backEndComm/shapeComm";
+import { pushLineCopy } from "./backEndComm/lineComm";
 import store from "./store";
 
 const shapeTypes = {
@@ -38,6 +40,7 @@ export function reCreateShape(shapeInfo){ // shape info passed as json
   let newShape = null;
   const shapeType = shapeInfo.type;
   const shapeId = shapeInfo.id;
+  console.log(shapeId);
   if (shapeType !== shapeTypes.line){
     const upperLeftConrner = {
       x: shapeInfo.upperLeftCorner.x,
@@ -82,5 +85,10 @@ export function reCreateShape(shapeInfo){ // shape info passed as json
   newShape.updateThickness(thickness);
   store.commit('pushShapeDrawn', newShape);
 
+  if(shapeType !== shapeTypes.line) pushShapeCopy(newShape, false);
+  else pushLineCopy(newShape, false);
+
   newShape.selector.disable();
+  newShape.selector.clicked = false;
+  store.commit('setSelecting', false);
 }

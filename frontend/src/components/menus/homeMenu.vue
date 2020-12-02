@@ -5,6 +5,7 @@
       <deleteBtn/>
       <shapeFormat/>
       <draw/>
+      <savingControl class="save"/>
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import undoRedo from './home-menu/undoRedo.vue';
 import shapeFormat from './home-menu/shapeFormat.vue';
 import deleteBtn from './home-menu/delete.vue';
 import draw from './home-menu/draw.vue';
+import savingControl from './home-menu/saving.vue';
 export default {
   name: 'homeMenu',
   components: {
@@ -22,6 +24,7 @@ export default {
     shapeFormat,
     deleteBtn,
     draw,
+    savingControl,
   },
   props: {
   },
@@ -67,5 +70,9 @@ export default {
   height: 32px;
   margin: 0px 4px;
   border-left: thin solid black;
+}
+
+.save{
+  margin-left: auto;
 }
 </style>

@@ -132,8 +132,8 @@ export default {
       newShape.updateFillColor(fillColor);
       newShape.updateThickness(thickness);
 
-      if(shapeType !== this.shapeTypes.line) pushShapeCopy(newShape);
-      else pushLineCopy(newShape);
+      if(shapeType !== this.shapeTypes.line) pushShapeCopy(newShape, true);
+      else pushLineCopy(newShape, true);
 
       this.pushNewShape(newShape);
       newShape.selector.enable();
