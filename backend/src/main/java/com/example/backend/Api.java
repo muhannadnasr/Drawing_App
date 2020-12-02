@@ -33,7 +33,6 @@ public class Api {
         String redoMap = controller.performRedo();
 
         if (redoMap == null) return "empty";
-
         shapeBuilder.resetShapesMap();
         return redoMap;
     }
