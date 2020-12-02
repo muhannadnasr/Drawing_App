@@ -9,6 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JsonConverter{
+    private static JsonConverter instance;
+
+    private JsonConverter(){}
+
+    public static JsonConverter getInstance(){
+        if(instance == null) instance = new JsonConverter();
+        return instance;
+    }
     public String shapeToJsonString(Shape shape){
         ObjectMapper mapper = new ObjectMapper();
         String jsonStr = "";

@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 public class Api {
-    ShapeBuilder shapeBuilder = new ShapeBuilder();
-    Controller controller = new Controller();
-    JsonConverter jsonConverter = new JsonConverter();
-    Xml xml = new Xml();
+    ShapeBuilder shapeBuilder = ShapeBuilder.getInstance();
+    Controller controller = Controller.getInstance();
+    JsonConverter jsonConverter = JsonConverter.getInstance();
+    Xml xml = Xml.getInstance();
 
     //testing
     @PostMapping("reset")
@@ -32,7 +32,7 @@ public class Api {
     public String performRedo(){
         String redoMap = controller.performRedo();
         shapeBuilder.resetShapesMap();
-
+        
         if (redoMap == null) return "empty";
         return redoMap;
     }
