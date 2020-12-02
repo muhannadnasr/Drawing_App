@@ -1,6 +1,6 @@
 <template>
   <div id="save-load">
-    <div class="sub-elem save" @click="save()">
+    <div class="sub-elem save">
       <img src="../../../assets/saving/save.png" width="40">
     </div>
   </div>
@@ -53,10 +53,6 @@ export default {
       }
       popUp.appendChild(closeBtn);
     },
-    save(){
-      const data = this.jsonInfo(1);
-      this.download("firstTry.json", data);
-    },
     download(filename, text) {
       var element = document.createElement('a');
       element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -69,18 +65,6 @@ export default {
 
       document.body.removeChild(element);
     },
-    jsonInfo(id){
-        axios.get('http://localhost:8085/getShapeData', {
-          params :{
-            id: id,
-          }
-        })
-        .then( (response) => {
-          return response.data;
-        })
-        .catch( (error) => console.log(error));
-
-    }
   },
 }
 </script>
