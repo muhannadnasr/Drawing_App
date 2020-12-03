@@ -298,7 +298,7 @@ export default {
         else{
           upperLeftConrner = {
             x: shapeInfo.upperLeftCorner.x,
-            y: shapeInfo.upperLeftCorner.x,
+            y: shapeInfo.upperLeftCorner.y,
           }
         }
         

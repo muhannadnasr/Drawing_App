@@ -31,9 +31,10 @@ public class Api {
     @GetMapping("/redo")
     public String performRedo(){
         String redoMap = controller.performRedo();
-        shapeBuilder.resetShapesMap();
+        // shapeBuilder.resetShapesMap();
         
         if (redoMap == null) return "empty";
+        shapeBuilder.resetShapesMap();
         return redoMap;
     }
 

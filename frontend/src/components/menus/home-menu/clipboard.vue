@@ -54,6 +54,7 @@ export default {
     },
     cutShape(){
       if(this.currentSelector === null) return;
+      console.log("here");
       this.setSelecitngStatus(false);
       this.currentCopied = this.currentSelector.shapeWrapped;
 
@@ -65,6 +66,8 @@ export default {
       
       del(this.currentSelector.shapeWrapped.shapeId);
       this.currentSelector.shapeWrapped.remove();
+
+      this.setCurrentSelector(null);
     },
     pasteShape(){
       if (this.currentCopied === null) return;
