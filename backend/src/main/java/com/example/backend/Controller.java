@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class Controller{
-    private static Controller instance;
     private Stack<String> undo = new Stack<>();
     private Stack<String> redo = new Stack<>();
     private JsonConverter jsonConverter = JsonConverter.getInstance();
+    private static Controller instance;
 
     private Controller(){}
 

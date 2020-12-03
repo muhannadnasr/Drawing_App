@@ -3,8 +3,9 @@ package com.example.backend;
 import java.util.HashMap;
 
 public class ShapeBuilder {
-    static private ShapeBuilder instance;
     private HashMap<Integer, Shape> shapes = new HashMap<>();
+    
+    static private ShapeBuilder instance;
 
     private ShapeBuilder(){}
 
