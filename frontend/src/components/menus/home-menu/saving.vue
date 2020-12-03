@@ -291,8 +291,8 @@ export default {
         let upperLeftConrner;
         if(this.loadedExtension === this.savingOptions.xml){
           upperLeftConrner = {
-            x: shapeInfo.upperLeftCorner.split(',')[0],
-            y: shapeInfo.upperLeftCorner.split(',')[1],
+            x: +(shapeInfo.upperLeftCorner.split(',')[0]),
+            y: +(shapeInfo.upperLeftCorner.split(',')[1]),
           }
         }
         else{
