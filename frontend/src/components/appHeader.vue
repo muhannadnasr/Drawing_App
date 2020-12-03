@@ -1,14 +1,22 @@
 <template>
   <div id="header">
-      <div id="file-name">Drawing App</div>
+      <div id="file-name">{{getFileName()}}</div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
 	name: 'appHeader',
 	props: {
 	},
+	computed: mapGetters(['fileName']),
+	methods:{
+		getFileName(){
+			if(this.fileName === "") return "Drawing App";
+			return this.fileName;
+		}
+	}
 }
 </script>
 

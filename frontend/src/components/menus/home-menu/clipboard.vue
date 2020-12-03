@@ -142,7 +142,6 @@ export default {
       newShape.selector.enable();
       newShape.selector.clicked = false;
       this.setCurrentSelector(newShape.selector);
-      console.log(this.currentSelector);
       this.setSelecitngStatus(true);
     }
   },

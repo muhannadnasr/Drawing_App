@@ -29,7 +29,6 @@ export default {
     undo(){
       axios.get('http://localhost:8085/undo')
       .then( (response) => {
-        console.log(response.data);
         this.clearBoard();
         if(response.data !== "empty") this.reconstructBoard(response.data);
       })
@@ -38,7 +37,6 @@ export default {
     redo(){
       axios.get('http://localhost:8085/redo')
       .then( (response) => {
-        console.log(response.data);
         if(response.data !== "empty") {
           this.clearBoard();
           this.reconstructBoard(response.data);
@@ -54,7 +52,6 @@ export default {
     },
     clearBoard(){
       for(let shape of this.shapesDrawn){
-        console.log(shape);
         shape.remove();
       }
       this.clearShapesDrawn();

@@ -4,7 +4,7 @@
       <img src="../../../assets/saving/save.png" width="40">
     </div>
     <div class="sub-elem load" @click="loadMenu()">
-      <img src="../../../assets/saving/choosePath.png" width="23">
+      <span id="load-title">load</span> <img src="../../../assets/saving/choosePath.png" width="23">
     </div>
   </div>
 </template>
@@ -47,7 +47,7 @@ export default {
   },
   computed: mapGetters(['shapesDrawn']),
   methods: {
-    ...mapActions(['clearShapesDrawn']),
+    ...mapActions(['clearShapesDrawn', 'changeFileName']),
     saveMenu(){
       if(this.shapesDrawn.length === 0) {
           return;
@@ -143,6 +143,7 @@ export default {
           fileName.className = "not-allowed";
         }
         else{
+          this.changeFileName(this.fileNameToBeSaved);
           if(this.saveAs === this.savingOptions.xml){
             this.fileNameToBeSaved += ".xml";
             this.saveAsXMl(this.fileNameToBeSaved);
@@ -162,6 +163,10 @@ export default {
     },
 
     loadMenu(){
+      if (this.shapesDrawn.length > 0){
+        alert(" all changes will be deleted");
+      }
+
       const popUpBackground = document.createElement('div');
       popUpBackground.className = 'pop-up-background';
       document.body.appendChild(popUpBackground);
@@ -186,6 +191,13 @@ export default {
           this.loadedExtension = fileInput.value.split('.')[1];
           this.readFileContent(file)
           .then( content => {
+            const fullPath = fileInput.value;
+            const startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+            let filename = fullPath.substring(startIndex);
+            if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                filename = filename.substring(1).split('.')[0];
+            }
+            this.changeFileName(filename)
             this.loadBoard(content);
             document.body.removeChild(popUpBackground); 
           })
@@ -204,7 +216,6 @@ export default {
       popUp.appendChild(cancelBtn);
       popUp.appendChild(fileInput);
     },
-
 
     download(filename, dataString) {
       var element = document.createElement('a');
@@ -244,13 +255,11 @@ export default {
         if(this.loadedExtension === this.savingOptions.xml){
           axios.get('http://localhost:8085/xmlToJson', {params:{xmlString: inputString}})
           .then( response => {
-            console.log(response.data);
             this.recreateShapes(response.data)
             })
           .catch( (error) => console.log(error));
         }
         else{
-          console.log(JSON.parse(inputString))
           this.recreateShapes(JSON.parse(inputString));
         }
       })
@@ -269,7 +278,6 @@ export default {
     },
     clearBoard(){
       for(let shape of this.shapesDrawn){
-        console.log(shape);
         shape.remove();
       }
       this.clearShapesDrawn();
@@ -496,5 +504,9 @@ input[type=text]::placeholder {
 .load-cancel-btn{
   grid-row: 3/4;
   grid-column: 3/4;
+}
+
+#load-title{
+  margin-right: 4px;
 }
 </style>
