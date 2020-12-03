@@ -38,42 +38,6 @@ public class Xml {
         return instance;
     }
 
-    // ## THIS IS A TEMPLATE FOR USING XML NOT THE REAL CODE!!! THE FOLLOWING FUNCTION MIGHT NOT BE NEEDED!
-    // @GetMapping("/xmltojava")
-    // public String xmlToJava() {
-
-    //     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    //     String answer = "";
-    //     try {
-    //         DocumentBuilder builder = factory.newDocumentBuilder();
-    //         Document doc = builder.parse("E:\\XML_TEST\\data.xml");
-    //         NodeList personList = doc.getElementsByTagName("Shapes");
-    //         for (int i = 0; i < personList.getLength(); i++) {
-    //             Node node = personList.item(i);
-    //             if (node.getNodeType() == Node.ELEMENT_NODE) {
-    //                 Element person = (Element) node;
-    //                 NodeList nameList = person.getChildNodes();
-    //                 for (int j = 0; j < nameList.getLength(); j++) {
-    //                     Node n = nameList.item(j);
-    //                     if (n.getNodeType() == Node.ELEMENT_NODE) {
-    //                         Element name = (Element) n;
-    //                         answer += name.getTextContent() + "  ";
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     } catch (ParserConfigurationException e) {
-    //         e.printStackTrace();
-    //         return "fail";
-    //     } catch (SAXException e) {
-    //         e.printStackTrace();
-    //         return "fail";
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //         return "fail";
-    //     }
-    //     return answer;
-    // }
     public String javaToXml(HashMap<Integer, Shape> shapes /*,String location*/) throws TransformerException {
         
         // INSERTING OBJECTS IN MAP FOR TESTING
@@ -153,9 +117,7 @@ public class Xml {
             StringWriter writer = new StringWriter();
             StreamResult result = new StreamResult(writer);
             transformer.transform(source, result);
-            String xmlstr =  writer.toString();
-            System.out.println(xmlstr);
-            return xmlstr;
+            return writer.toString();
 
         } catch (ParserConfigurationException | TransformerConfigurationException e) {
             e.printStackTrace();

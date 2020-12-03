@@ -20,14 +20,11 @@ public class Controller{
         String undoed;
         System.out.println("\n" + undo.size());
         if(undo.size() != 0){
-//            System.out.println("before\n" + undo.peek() + "\n");
             undoed = undo.pop();
-//            System.out.println("popped");
             redo.push(undoed);
         }
         System.out.println(undo.size() + "\n");
         if(undo.size() != 0) {
-//            System.out.println("after\n" + undo.peek() + "\n");
             return undo.peek();
         }
         else return null;
@@ -44,7 +41,6 @@ public class Controller{
     }
 
     public void addUndo(HashMap<Integer, Shape> shapes){
-        System.out.println("calledMe");
         String jsonStr = jsonConverter.jsonStrFromHashMap(shapes);
         undo.push(jsonStr);
         redo.clear();
