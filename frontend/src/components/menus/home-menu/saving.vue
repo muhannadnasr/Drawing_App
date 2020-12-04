@@ -6,6 +6,8 @@
     <div class="sub-elem load" @click="loadMenu()">
       <span id="load-title">load</span> <img src="../../../assets/saving/choosePath.png" width="23">
     </div>
+    <div class="label-saving">Save & Load</div>
+    <div class="seperator-saving"></div>
   </div>
 </template>
 
@@ -330,13 +332,27 @@ export default {
         newShape.updateOutlineColor(outlineColor);
       }
       else {
-        const startingPoint = {
-          x: shapeInfo.startingPoint.x,
-          y: shapeInfo.startingPoint.y,
+        let startingPoint;
+        let endingPoint;
+        if(this.loadedExtension === this.savingOptions.xml){
+          startingPoint = {
+            x: +(shapeInfo.startingPoint.split(',')[0]),
+            y: +(shapeInfo.startingPoint.split(',')[1]),
+          };
+          endingPoint = {
+            x: +(shapeInfo.endingPoint.split(',')[0]),
+            y: +(shapeInfo.endingPoint.split(',')[1]),
+          }
         }
-        const endingPoint = {
-          x: shapeInfo.endingPoint.x,
-          y: shapeInfo.endingPoint.y,
+        else{
+          startingPoint = {
+            x: shapeInfo.startingPoint.x,
+            y: shapeInfo.startingPoint.y,
+          };
+          endingPoint = {
+            x: shapeInfo.endingPoint.x,
+            y: shapeInfo.endingPoint.y,
+          }
         }
         newShape = new Line(startingPoint.x, startingPoint.y, shapeType, shapeId);
         newShape.create(startingPoint.x, startingPoint.y, endingPoint.x, endingPoint.y);
@@ -508,5 +524,20 @@ input[type=text]::placeholder {
 
 #load-title{
   margin-right: 4px;
+}
+
+.label-saving{
+  grid-row: 3/4;
+  grid-column: 2/4;
+  text-align: center;
+  font-size: 10px;
+  color: darkgrey;
+}
+
+.seperator-saving{
+  border-left: thin solid darkgray;
+  height: 70px;
+  grid-row: 1/4;
+  grid-column: 1/2;
 }
 </style>

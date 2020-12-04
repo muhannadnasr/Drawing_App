@@ -66,12 +66,6 @@ export default {
   padding: 8.5px 8.5px;
 }
 
-.seperator{
-  height: 32px;
-  margin: 0px 4px;
-  border-left: thin solid black;
-}
-
 .save{
   margin-left: auto;
 }
